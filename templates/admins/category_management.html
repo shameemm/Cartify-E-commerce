@@ -1,0 +1,64 @@
+{% extends 'admins/admin_base.html' %}{% block content %}
+<nav class="navbar " style="background: #F9F7F7;    ">
+    <div class="container d-flex">
+      <a class="navbar-brand" style="color: #655C56;" href="#">
+        <b>ecommerce</b>
+        
+      </a>
+      <div class="d-flex">
+      <a class="nav-link " style="color: #655C56;" href="users">Users</a>
+      <a class="nav-link " style="color: #655C56;" href="products">Products</a>
+      <a class="nav-link " style="color: #655C56;" href="category">Category</a>
+      <a class="nav-link " style="color: #655C56;" href="adminlogout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="container">
+
+        
+        <div class="col-md-8 my-4" style="width:auto;">
+            <div class="card">
+                <div class="card-header d-flex">
+                    <div style="width:85%">
+                    <h4>Category Management</h4>
+                    </div>
+                    <div >
+                    <a class="btn btn-primary " href ="addcategory">Add Category</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Delete</th>
+                                <th>Block / Unblock</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in categories %}
+                            <tr>
+                                <td>{{category.id}}</td>
+                                <td>{{category.name}}</td>
+                                <td>{{category.description}}</td>
+                                <td><a href="delete_category?id={{category.id}}" class="btn btn-danger">Delete</a></td>
+                                <td>
+                                    {% if category.is_active %}
+                                    <a href="category_block?id={{category.id}}" style="background:#CCEDD2;" class="btn">Block</a>
+                                    {% else %}
+                                    <a href="category_unblock?id={{category.id}}" style="background:#CCEDD2;" class="btn">Unblock</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

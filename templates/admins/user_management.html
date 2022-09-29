@@ -1,0 +1,59 @@
+{% extends 'admins/admin_base.html' %}{% block content %}
+<nav class="navbar " style="background: #F9F7F7;    ">
+    <div class="container d-flex">
+      <a class="navbar-brand" style="color: #655C56;" href="#">
+        <b>ecommerce</b>
+        
+      </a>
+      <div class="d-flex">
+      <a class="nav-link " style="color: #655C56;" href="users">Users</a>
+      <a class="nav-link " style="color: #655C56;" href="products">Products</a>
+      <a class="nav-link " style="color: #655C56;" href="category">Category</a>
+      <a class="nav-link " style="color: #655C56;" href="adminlogout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="container">
+   
+        
+        <div class="col-md-8 my-4" style="width:auto;">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Users</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Block / Unblock</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{user.first_name}} {{user.last_name}}</td>
+                                <td>{{user.username}}</td>
+                                <td>{{user.email}}</td>
+                                <td>{{user.accounts.phone}}</td>
+                                <td>
+                                    {% if user.is_active %}
+                                    <a href="block?id={{user.id}}" style="background:#CCEDD2;" class="btn">Block</a>
+                                    {% else %}
+                                    <a href="unblock?id={{user.id}}" style="background:#CCEDD2;" class="btn">Unblock</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

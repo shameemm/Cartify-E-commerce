@@ -1,0 +1,65 @@
+{% extends 'admins/admin_base.html' %}{% block content %}
+<nav class="navbar " style="background: #F9F7F7;    ">
+    <div class="container d-flex">
+      <a class="navbar-brand" style="color: #655C56;" href="#">
+        <b>ecommerce</b>
+        {% comment %} <img src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24"> {% endcomment %}
+      </a>
+      <div class="d-flex">
+      <a class="nav-link " style="color: #655C56;" href="users">Users</a>
+      <a class="nav-link " style="color: #655C56;" href="products">Products</a>
+      <a class="nav-link " style="color: #655C56;" href="category">Category</a>
+      <a class="nav-link " style="color: #655C56;" href="adminlogout">Logout</a>
+      </div>
+    </div>
+  </nav>
+    
+<div class="container">
+    
+   
+        
+    <div class="col-md-8 my-4" style="width:auto;">
+        <div>
+            </div>
+        <div class="card">
+            <div class="card-header d-flex">
+                <div style="width:85%">
+                <h4>Products Management</h4>
+                </div>
+                <div >
+                <a class="btn btn-primary " href ="addproduct
+                ">Add Product</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Image</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                        <tr>
+                            <td>{{product.name}}</td>
+                            <td><img src=".{{product.image.url}}" class = "img-fluid" style="width:100px; height:100px;"></td>
+                            <td>{{product.price}}</td>
+                            <td>{{product.category.name}}</td>
+                            <td>{{product.description}}</td>
+                            <td><a class="btn btn-primary" href="editproduct?id={{product.id}}">Edit</a></td>
+                            <td><a class="btn btn-danger" href="deleteproduct?id={{product.id}}">Delete</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

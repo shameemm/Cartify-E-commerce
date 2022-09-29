@@ -1,0 +1,43 @@
+{% extends 'admins/admin_base.html' %}{% block content %}
+<nav class="navbar " style="background: #F9F7F7;    ">
+    <div class="container d-flex">
+      <a class="navbar-brand" style="color: #655C56;" href="#">
+        <b>ecommerce</b>
+        
+      </a>
+      <div class="d-flex">
+      <a class="nav-link " style="color: #655C56;" href="users">Users</a>
+      <a class="nav-link " style="color: #655C56;" href="products">Products</a>
+      <a class="nav-link " style="color: #655C56;" href="category">Category</a>
+      <a class="nav-link " style="color: #655C56;" href="adminlogout">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+<div class="container">
+   
+        
+        <div class="col-md-8 my-4 mx-auto" style="width:60%;">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Add Category</h4>
+                </div>
+                <div class="card-body">
+                    <form action="addcategory" method ="POST">
+                      {% csrf_token %}
+                        <div class="form-group" >
+                          <label for="exampleInputEmail1">Category Name</label>
+                          <input type="text" class="form-control" name="name" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Category Name">
+                        </div>
+                        <div class="form-group my-4">
+                            <label for="exampleFormControlTextarea1">Description</label>
+                            <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn "style="background:#94D3AC;">Add Category</button>
+                      </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

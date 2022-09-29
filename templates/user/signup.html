@@ -1,0 +1,100 @@
+{% extends 'user/base.html' %} {% block content %}
+<nav class="navbar " style="background: #1C3879;    ">
+    <div class="container d-flex">
+      <a class="navbar-brand" style="color: #FFFFFF;" href="#">
+        <b>ecommerce</b>
+        {% comment %} <img src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24"> {% endcomment %}
+      </a>
+      <div class="d-flex">
+      <a class="nav-link " style="color: #FFFFFF;" href="#">About Us</a>
+      <a class="nav-link " style="color: #FFFFFF;" href="/login">login</a>
+      </div>
+    </div>
+</nav>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="https://assets.streamlinehq.com/image/private/w_400,h_400,ar_1/f_auto/l_watermark_mnkze9/o_30/c_scale,w_181/fl_layer_apply,x_0,y_133/v1/icons/illustrations-brooklyn/shopping/shopping/shop-open-5-g5rioxu0n5woxr8ttxs9gb.png" alt="" width="75%" height="80%">
+        </div>
+        <div class="col-md-6 rounded-3 p-3 mx-auto" style="background: #607EAA; width:40%;">
+            <div class="container ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center px-5 fs-4 my-3 fw-bold" style="color:#F9F5EB;">SIGNUP</h1>
+                        <form action="signup" method="POST" id="signup">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" class="form-control" placeholder = "First Name" id="firstname" style="background:#D9D9D9" aria-describedby="" name="first_name">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <input type="text" class="form-control" placeholder = "Last  Name" id="lastname" style="background:#D9D9D9" aria-describedby="" name="last_name">
+                                </div>
+                              </div>
+                            <div class="form-group ">
+                                
+                                <input type="text" class="form-control" placeholder = "Mobile number" id="phone" style="background:#D9D9D9" aria-describedby="" name="phone">
+                            </div> 
+                            <div class="form-group mt-3">
+                                <input type="text" class="form-control" placeholder = "Email Address" id="email" style="background:#D9D9D9" aria-describedby="emailHelp" name="email">
+                                <span id="error1" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="text" class="form-control" placeholder = "username" id="username" style="background:#D9D9D9" aria-describedby="" name="username">
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="password" style="background:#D9D9D9" placeholder = "Password" class="form-control" id="password1" name="password">
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="password" style="background:#D9D9D9" placeholder = "Confirm Password" class="form-control" id="password2" name="confirm_password">
+                                <span id="error" class="text-danger"></span>
+                            </div>
+                            <button type="submit" id="btn1" class="btn  mt-3" style="width:100%; background:#1C3879; color:white;">Signup</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#btn1').click(()=>{
+        var firstname = $('#firstname').val()
+        var lastname = $('#lastname').val()
+        var phone = $('#phone').val()
+        var email = $('#email').val()
+        var password1 = $('#password1').val()
+        var password2 = $('#password2').val()
+        var username = $('#username').val()
+        var atposition=email.indexOf("@");  
+        var dotposition=email.lastIndexOf(".");
+        if(firstname == '' || lastname == '' || email == '' || password1 == '' || password2 == '' || username == ''){
+            $('#error').html('All fields are required')
+            return false
+        }
+        else if(password1 != password2){
+            $('#error').html('password does not match')
+            return false
+        } 
+        else if (atposition<1 || dotposition<atposition+2 || dotposition+2>=email.length){  
+            $('#error1').html('Enter a valid email address')
+            return false;  
+        }
+        else if(phone.length != 10){
+           $('#error').html('Enter a valid phone number')
+            return false
+        }
+        else if(password1.length < 8){
+            $('#error').html('Password must be atleast 8 characters')
+            return false
+        }
+        else{
+            $('#error').html('')
+            $('#error1').html('')
+            return true
+        }
+        
+    })
+
+</script>
+{% endblock%}
