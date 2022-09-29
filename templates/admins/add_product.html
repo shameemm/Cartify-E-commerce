@@ -24,6 +24,12 @@
             <div class="card-body">
                 <form action="addproduct" method ="POST" enctype="multipart/form-data">
                   {% csrf_token %}
+                  <div class="form-group" >
+                    <label for="pname">Brand</label>
+                    <input type="text" class="form-control" name="brand"  id="brand" aria-describedby="emailHelp" placeholder="Product Brand">
+                    <span id="errorbrand" class="text-danger"></span>
+                  </div>
+
                     <div class="form-group" >
                       <label for="pname">Name</label>
                       <input type="text" class="form-control" name="name" id="name" aria-describedby="emailHelp" placeholder="Product Name">
@@ -68,11 +74,15 @@
       var category = $('#category').val()
       var price = $('#price').val()
       var description = $('#description').val()
+      var brand = $('#brand').val()
       console.log(image)
       
 
-      
-      if(name == '' ){
+      if(brand == ''){
+        $('#errorbrand').html('Enter the brand')
+        return false
+    }
+    else if(name == '' ){
           $('#errorname').html('Enter the name')
           return false
       }
@@ -92,6 +102,7 @@
           $('#errordescription').html('Enter the description')
           return false
       }
+      
       else{
           $('#error').html('')
           $('#error1').html('')

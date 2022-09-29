@@ -58,12 +58,13 @@
       </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
+    <div class="row row-cols-1 cols-md-4 mt-3">
        {% for product in products %} 
-       <div class="card m-4" style="width: 18rem;">
+       <div class="card m-3" style="width: 18rem;">
         <img src=".{{product.image.url}}" class="card-img-top w-100 h-100" alt="...">
         
         <div class="card-body">
+          <p class="text-secondary">{{product.brand}}</p>
           <h5 class="card-title">{{product.name}}</h5>
           <p class="card-text">{{product.description}}</p>
           

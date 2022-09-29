@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.models import User,auth
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from accounts.models import Accounts
 from admins.models import *
@@ -20,6 +21,9 @@ def login(request):
             auth.login(request, user)
             
             return redirect('index')
+        else:
+            messages.info(request,"Invalid Credentials")
+            return redirect('login')
     return render(request, 'user/login.html')
 
 def index(request):
