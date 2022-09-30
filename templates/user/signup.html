@@ -48,6 +48,9 @@
                             <div class="form-group mt-3">
                                 <input type="password" style="background:#D9D9D9" placeholder = "Confirm Password" class="form-control" id="password2" name="confirm_password">
                                 <span id="error" class="text-danger"></span>
+                                {% for messasge in messages %}
+                                <span class="text-light">{{message}}<span>
+                                {% endfor %}
                             </div>
                             <button type="submit" id="btn1" class="btn  mt-3" style="width:100%; background:#1C3879; color:white;">Signup</button>
                         </form>
@@ -80,7 +83,7 @@
             $('#error1').html('Enter a valid email address')
             return false;  
         }
-        else if(phone.length != 10){
+        else if(phone.length != 13){
            $('#error').html('Enter a valid phone number')
             return false
         }

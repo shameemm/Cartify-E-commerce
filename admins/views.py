@@ -78,6 +78,7 @@ def addproduct(request):
         brand = request.POST['brand']
         print(request.FILES,"  1111")
         image = request.FILES['image']
+        
         category=Category.objects.get(id=category)
         product = Product.objects.create(name=name,description=description,price=price,category=category,image=image,brand=brand)
         product.save()
@@ -108,10 +109,7 @@ def edit_product(request):
         id=request.GET['id']
         prod = Product.objects.get(id=id)
         print(id)
-        # if len(request.FILES) !=0:
-        #     if len(prod.image)>0:
-        #         proimg='.'+prod.image.path
-        #         os.remove(proimage)
+        
         name = request.POST['name']
         description = request.POST['description']
         price = request.POST['price']
@@ -119,6 +117,7 @@ def edit_product(request):
         brand = request.POST['brand']
         print(request.FILES,"  1111")
         image = request.FILES['image']
+        
         category=Category.objects.get(id=category)
         product = Product.objects.get(id=id)
         product.name=name
@@ -126,7 +125,8 @@ def edit_product(request):
         product.price=price
         product.category=category
         product.brand=brand
-        product.image=image 
+        
+        product.image=image
         product.save()
         
         return redirect('products')

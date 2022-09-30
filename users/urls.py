@@ -10,6 +10,8 @@ urlpatterns = [
     path('',views.index, name='index'),
     path('logout',views.logout, name='logout'),
     path('view_product',views.view_product, name='view_product'),
+    path('otplogin',views.otplogin, name='otplogin'),
+    path('getotp',views.getotp, name='getotp'),
 ]
 
 if settings.DEBUG:

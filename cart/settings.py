@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+# from .env import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+TWILIO_ACCOUNT_SID='AC5f56422401e8febee9618e9fde8d172a'
+TWILIO_AUTH_TOKEN='90f3cb3050a57f35adf4c837fc91d5fc'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -127,7 +129,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+STATIC_ROOT=os.path.join(BASE_DIR,'assets')
 
 
 
@@ -139,3 +144,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
+
+ACCOUNT_SID = TWILIO_ACCOUNT_SID
+AUTH_TOKEN = TWILIO_AUTH_TOKEN
