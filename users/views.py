@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from accounts.models import Accounts
 from admins.models import *
+from .models import *
+from django.db.models import Sum
 from .mixins import MessageHandler
 import random
 # Create your views here.
@@ -64,6 +66,21 @@ def view_product(request):
     product=Product.objects.get(id=id)
     return render(request, 'user/view_product.html',{'product':product})
 
+def minus(request):
+    id=request.GET['id']
+    cart=Cart.objects.get(id=id)
+    qty=cart.quantity-1
+    print(qty)
+    Cart.objects.filter(id=id).update(quantity=qty)
+    return redirect('cart')    
+
+def up(request):
+    id=request.GET['id']
+    cart=Cart.objects.get(id=id)
+    qty=cart.quantity+1
+    print(qty)
+    Cart.objects.filter(id=id).update(quantity=qty)
+    return redirect('cart')
 def getotp(request):
     phone=request.POST['phone']
     # Accounts.objects.get(phone=phone)
@@ -77,23 +94,71 @@ def getotp(request):
         num = Accounts.objects.filter(phone=phone)
         print('1',number.phone)
         user = User.objects.get(id=number.user_id)
-        otp=random.randint(1000,9999)
+        otp=random.randint(100000,999999)
         numb=Accounts.objects.filter(phone=phone).update(otp=otp)
         print(otp)
         
-        # message_handler = MessageHandler(phone,otp).sent_otp_on_phone()
+        message_handler = MessageHandler(phone,otp).sent_otp_on_phone()
         return render(request, 'user/otplogin.html',{'user':user})
 
 def otplogin(request):
     id=request.GET['id']
     otp=request.POST['otp']
+    user=User.objects.get(id=id)
+    print(user.accounts.phone)
     if Accounts.objects.filter(otp=otp).exists():
-        user=User.objects.get(id=id)
+        user = auth.authenticate(request, username=user.username, password=user.password)
         auth.login(request, user)
         return redirect('index')
     else:
         messages.info(request,"Invalid OTP")
         return redirect('login')
+    
+def cart(request):
+    if request.user.is_authenticated:
+        user=request.user
+        cart= Cart.objects.filter(user=user) 
+        for i in range(len(cart)):
+            if cart[i].quantity<1:
+                cart[i].delete()
+            
+        
+        if len(cart)==0:
+            empty="Cart is Empty"
+            
+            return render(request, 'user/cart.html',{'empty':empty})
+        else:
+            
+            subtotal=0
+            for i in range(len(cart)):
+                x=cart[i].product.price*cart[i].quantity
+                subtotal=subtotal+x
+            shipping = 0
+            total = subtotal+ shipping
+            return render(request, 'user/cart.html',{'cart':cart,'subtotal':subtotal,'total':total})
+    else:
+        return redirect('login')
+    
+def checkout(request):
+    return render(request, 'user/checkout.html')
+@login_required(login_url=login)   
+def addtocart(request):
+    pid = request.GET['pid']
+    product = Product.objects.get(id=pid)
+    uid = request.user
+    print("pid=",pid)
+    print("uid =",uid)
+    if Cart.objects.filter(product=pid, user=uid).exists():
+        cart = Cart.objects.get(product=pid, user=uid)
+        cart.quantity += 1
+        cart.save()
+        return redirect('cart')
+    else:
+        cart = Cart.objects.create(product=product, user=uid)
+        cart= Cart.objects.filter(user=uid)
+        # return render(request, 'user/cart.html',{'cart':cart})
+        return redirect('cart')
+    
 def logout(request):
     # user=request.user
     auth.logout(request)

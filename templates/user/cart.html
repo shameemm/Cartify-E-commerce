@@ -1,0 +1,73 @@
+{% extends 'user/base.html'%} {% block content%}
+
+
+<div class = "d -flex container">
+    <div class="row my-5 ">
+        
+        <div class="col-md-9">
+            <div class="card ">
+                <div class="card-header">
+                    <h4>My Cart</h4>
+                </div>
+                
+                <div class="card-body">
+                    <h2>{{empty}}</h2>
+                        {% for cart in cart %}
+                        <div class=" ">
+                            <div class="">
+                                <div class=" d-flex">
+                                    <div class=""style="min-width:150px; max-width:150px;">
+                                        <img src=".{{cart.product.image.url}}" class="img-fluid w-60 fit-cover" style ="">
+                                    </div>
+                                    <div class="p-4">
+                                        <h4>{{cart.product.name}}</h4>
+                                        <p>{{cart.product.description}}</p>
+                                        <p>Price: ₹{{cart.product.price}}/-</p>
+                                        <p>Quantity</p>
+                                        <div class="d-flex ">
+                                            
+                                            <div class=""><a href="minus?id={{cart.id}}" class="border btn">-</a></div>
+                                            
+                                            <div><p class="mx-1">{{cart.quantity}}</p></div>
+                                            <div class=""style=""><a href="up?id={{cart.id}}" class="border btn">+</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class= "col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Price details</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tr>
+                                <td>Subtotal</td>
+                                <td>₹{{subtotal}}/-</td>
+                            </tr>
+                            <tr>
+                                <td>Shipping</td>
+                                <td>Free</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>₹{{total}}/-</td>
+                            </tr>
+                        </table>
+                        <a href="checkout" class="btn btn-primary" style="width:100%; background:#1C3879;">Checkout</a>
+                    </div>
+                </div>
+        </div>
+        
+        
+    </div>
+    
+
+</div>
+{%endblock%}

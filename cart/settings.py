@@ -15,8 +15,8 @@ import os
 # from .env import TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TWILIO_ACCOUNT_SID='AC5f56422401e8febee9618e9fde8d172a'
-TWILIO_AUTH_TOKEN='90f3cb3050a57f35adf4c837fc91d5fc'
+TWILIO_ACCOUNT_SID='ACb7ac82c347a5d2e34be2163cf2b46607'
+TWILIO_AUTH_TOKEN='69e7d23ebe224815597c9610edb460d4'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     
     'accounts.apps.AccountsConfig',
     'admins.apps.AdminsConfig',
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

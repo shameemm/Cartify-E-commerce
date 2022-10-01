@@ -12,6 +12,11 @@ urlpatterns = [
     path('view_product',views.view_product, name='view_product'),
     path('otplogin',views.otplogin, name='otplogin'),
     path('getotp',views.getotp, name='getotp'),
+    path('addtocart',views.addtocart,name='addtocart'),
+    path('cart',views.cart,name='cart'),
+    path('minus',views.minus,name='minus'),
+    path('up',views.up,name='up'),
+    path('checkout',views.checkout,name='checkout'),
 ]
 
 if settings.DEBUG:
