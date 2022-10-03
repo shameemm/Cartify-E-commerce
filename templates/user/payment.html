@@ -1,0 +1,58 @@
+{% extends 'user/base.html'%} {% block content%}
+
+
+<div class = "d -flex container">
+    <div class="row my-5 ">
+        
+        <div class="col-md-9">
+            <div class="card ">
+                <div class="card-header">
+                    <h4>Checkout</h4>
+                </div>
+                
+                <div class="card-body">
+                    <h6>Select payment methods</h6>
+                    <form action="payment" method = "POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="amount" value="{{total}}" id="amount">
+                        
+                        <input type="radio" name="payment" value="cod" class="m-3" checked> Cash on delivery <br>
+                        <input type="radio" name="payment" value="card" class="m-3"> Card<br>
+                        <input type="radio" name="payment" value="netbanking" class="m-3"> Netbanking<br>
+                        <input type="radio" name="payment" value="upi" class="m-3"> UPI<br>
+                        <button type="submit " class="btn text-light " style="width: 50%; float:right; background:#1C3879;">Place Order</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class= "col-md-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Price details</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <tr>
+                                <td>Subtotal</td>
+                                <td>₹{{subtotal}}/-</td>
+                            </tr>
+                            <tr>
+                                <td>Shipping</td>
+                                <td>Free</td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td>₹{{total}}/-</td>
+                            </tr>
+                        </table>
+                        
+                    </div>
+                </div>
+        </div>
+        
+        
+    </div>
+    
+
+</div>
+{%endblock%}

@@ -13,19 +13,20 @@
                 <div class="card-body">
                     <h2>{{empty}}</h2>
                         {% for cart in cart %}
-                        <div class=" ">
+                        <div class=" .product_data">
                             <div class="">
                                 <div class=" d-flex">
                                     <div class=""style="min-width:150px; max-width:150px;">
                                         <img src=".{{cart.product.image.url}}" class="img-fluid w-60 fit-cover" style ="">
                                     </div>
                                     <div class="p-4">
+                                        <input type="hidden" class="prod_id" value="{{cart.product.id}}">
+                                        {% csrf_token %}
                                         <h4>{{cart.product.name}}</h4>
                                         <p>{{cart.product.description}}</p>
                                         <p>Price: ₹{{cart.product.price}}/-</p>
                                         <p>Quantity</p>
-                                        <div class="d-flex ">
-                                            
+                                        <div class="d-flex input-group text-center ">
                                             <div class=""><a href="minus?id={{cart.id}}" class="border btn">-</a></div>
                                             
                                             <div><p class="mx-1">{{cart.quantity}}</p></div>
@@ -39,7 +40,9 @@
                     </div>
                 </div>
             </div>
-            
+            {% if empty %}
+
+            {% else %}
             <div class= "col-md-3">
                 <div class="card">
                     <div class="card-header">
@@ -63,6 +66,7 @@
                         <a href="checkout" class="btn btn-primary" style="width:100%; background:#1C3879;">Checkout</a>
                     </div>
                 </div>
+                {% endif %}
         </div>
         
         

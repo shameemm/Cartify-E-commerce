@@ -11,24 +11,38 @@ from .mixins import MessageHandler
 import random
 # Create your views here.
 
-
-
-
 def login(request):
     if request.user.is_authenticated and request.user.is_superuser==False:
         return redirect('index')
-    if request.method == 'POST':
+    if request.method == 'POST' and 'username' in request.POST and 'password' in request.POST and 'otp' not in request.POST :
         username = request.POST['username']
         password = request.POST['password']
+        user = User.objects.get(username=username)
+        phone = user.accounts.phone
         user = auth.authenticate(request, username=username, password=password)
+        otp=random.randint(100000,999999)
+        print(otp)
+        numb=Accounts.objects.filter(phone=phone).update(otp=otp)
+        phone = '+91'+str(phone)
+        message_handler = MessageHandler(phone,otp).sent_otp_on_phone()
+        return render(request, 'user/otplogin.html',{'username':username, 'password':password})
+    elif request.method=='POST' and 'otp' in request.POST:
+        otp = request.POST['otp']
+        username = request.POST['username']
+        password = request.POST['password']
+        if Accounts.objects.filter(otp=otp).exists():
+            user = auth.authenticate(request, username=username, password=password)
+            print("user = ",user)
+            auth.login(request, user)
+            return redirect('index')
         if user is not None  and user.is_active and user.is_superuser==False:
             auth.login(request, user)
-            
             return redirect('index')
         else:
             messages.info(request,"Invalid Credentials")
             return redirect('login')
-    return render(request, 'user/login.html')
+    else:
+        return render(request, 'user/login.html')
 
 def index(request):
     product=Product.objects.all()
@@ -83,9 +97,6 @@ def up(request):
     return redirect('cart')
 def getotp(request):
     phone=request.POST['phone']
-    # Accounts.objects.get(phone=phone)
-    
-    # user=User.objects.filter(id=phone.user_id)
     if not Accounts.objects.filter(phone=phone).exists():
         messages.info(request,"Phone Number Not Registered")
         return redirect('login')
@@ -113,7 +124,7 @@ def otplogin(request):
     else:
         messages.info(request,"Invalid OTP")
         return redirect('login')
-    
+@login_required(login_url='login')    
 def cart(request):
     if request.user.is_authenticated:
         user=request.user
@@ -121,14 +132,10 @@ def cart(request):
         for i in range(len(cart)):
             if cart[i].quantity<1:
                 cart[i].delete()
-            
-        
         if len(cart)==0:
             empty="Cart is Empty"
-            
             return render(request, 'user/cart.html',{'empty':empty})
         else:
-            
             subtotal=0
             for i in range(len(cart)):
                 x=cart[i].product.price*cart[i].quantity
@@ -138,9 +145,48 @@ def cart(request):
             return render(request, 'user/cart.html',{'cart':cart,'subtotal':subtotal,'total':total})
     else:
         return redirect('login')
-    
+@login_required(login_url='login')    
 def checkout(request):
-    return render(request, 'user/checkout.html')
+    if request.method=='POST':
+        user = request.user
+        name = request.POST['name']
+        phone = request.POST['phone']
+        address = request.POST['address']
+        city = request.POST['city']
+        state = request.POST['state']
+        pincode = request.POST['pincode']
+        address = Address.objects.create(name=name, phone=phone, address=address, city=city, state=state, pincode=pincode,user=user)
+        address.save()
+        return redirect('payment')
+    else:
+        user = request.user
+        cart = Cart.objects.filter(user=user)
+        subtotal=0
+        for i in range(len(cart)):
+            x=cart[i].product.price*cart[i].quantity
+            subtotal=subtotal+x
+        shipping = 0
+        total = subtotal+ shipping
+        return render(request, 'user/checkout.html',{'subtotal':subtotal, 'total':total})
+    
+def payment(request):
+    if request.method=='POST':
+        method=request.POST['payment']   
+        amount = request.POST['amount']
+        print(method)
+        order = Order.object
+        return JsonResponse({'method':method})
+    else:
+        user = request.user
+        cart = Cart.objects.filter(user=user)
+        subtotal=0
+        for i in range(len(cart)):
+            x=cart[i].product.price*cart[i].quantity
+            subtotal=subtotal+x
+        shipping = 0
+        total = subtotal+ shipping
+        return render(request, 'user/payment.html',{'subtotal':subtotal, 'total':total})
+    
 @login_required(login_url=login)   
 def addtocart(request):
     pid = request.GET['pid']
@@ -156,7 +202,6 @@ def addtocart(request):
     else:
         cart = Cart.objects.create(product=product, user=uid)
         cart= Cart.objects.filter(user=uid)
-        # return render(request, 'user/cart.html',{'cart':cart})
         return redirect('cart')
     
 def logout(request):
