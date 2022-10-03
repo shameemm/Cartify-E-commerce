@@ -65,6 +65,7 @@ def signup(request):
         if User.objects.filter(username=username).exists():
             messages.info(request, 'Username Taken')
             return redirect('signup')
+        
         user = User.objects.create_user(first_name=first_name, last_name=last_name,  username=username, email=email, password=password)
         user.save()
         user_id = User.objects.get(username=username)
@@ -128,6 +129,7 @@ def otplogin(request):
 def cart(request):
     if request.user.is_authenticated:
         user=request.user
+        
         cart= Cart.objects.filter(user=user) 
         for i in range(len(cart)):
             if cart[i].quantity<1:
@@ -161,20 +163,33 @@ def checkout(request):
     else:
         user = request.user
         cart = Cart.objects.filter(user=user)
+        print(cart )
+        subtotal=0
+        for i in range(len(cart)):
+            x=cart[i].product.price*cart[i].quantity
+            subtotal=subtotal+x
+        shipping = 0
+        total = subtotal+shipping
+        return render(request, 'user/checkout.html',{'subtotal':subtotal, 'total':total})
+    
+def payment(request):
+    if request.method=='POST':
+        user = request.user
+        method=request.POST['payment']   
+        amount = request.POST['amount']
+        cart = Cart.objects.filter(user=user)
+        address = Address.objects.get(user=user)
+        # crt = Cart.objects.get(user=user)
+        print(cart)
         subtotal=0
         for i in range(len(cart)):
             x=cart[i].product.price*cart[i].quantity
             subtotal=subtotal+x
         shipping = 0
         total = subtotal+ shipping
-        return render(request, 'user/checkout.html',{'subtotal':subtotal, 'total':total})
-    
-def payment(request):
-    if request.method=='POST':
-        method=request.POST['payment']   
-        amount = request.POST['amount']
+        
         print(method)
-        order = Order.object
+        order = Order.objects.create(user=user,address=address, amount=total, method=method)
         return JsonResponse({'method':method})
     else:
         user = request.user
@@ -185,9 +200,21 @@ def payment(request):
             subtotal=subtotal+x
         shipping = 0
         total = subtotal+ shipping
-        return render(request, 'user/payment.html',{'subtotal':subtotal, 'total':total})
-    
-@login_required(login_url=login)   
+        return render(request, 'user/payment.html',{'subtotal':subtotal, 'total':total,'cart':cart})
+
+@login_required(login_url='login')
+def myorder(request):
+    order = Order.objects.filter(user=request.user)
+    cart = Cart.objects.filter(user=request.user)
+    subtotal=0
+    for i in range(len(cart)):
+        x=cart[i].product.price*cart[i].quantity
+        subtotal=subtotal+x
+    shipping = 0
+    total = subtotal+ shipping
+    return render(request, 'user/orders.html',{'orders':order, 'cart':cart, 'total':total})
+
+@login_required(login_url='login')   
 def addtocart(request):
     pid = request.GET['pid']
     product = Product.objects.get(id=pid)
@@ -204,6 +231,12 @@ def addtocart(request):
         cart= Cart.objects.filter(user=uid)
         return redirect('cart')
     
+def cancelorder(request):
+    user=request.user
+    id=request.GET['id']
+    Order.objects.filter(id=id).update(status='Cancelled')
+    Cart.objects.filter(user=user).update(cancel="True")
+    return redirect('myorder')
 def logout(request):
     # user=request.user
     auth.logout(request)

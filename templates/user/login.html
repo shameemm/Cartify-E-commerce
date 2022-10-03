@@ -6,11 +6,11 @@
         <div class="col-md-6">
             <img src="https://assets.streamlinehq.com/image/private/w_400,h_400,ar_1/f_auto/l_watermark_mnkze9/o_30/c_scale,w_181/fl_layer_apply,x_0,y_133/v1/icons/illustrations-brooklyn/interface/interface/enter-password-5-tq6m8iajifyg6gfdbux9f.png" alt="" width="75%" height="80%">
         </div>
-        <div class="col-md-6 rounded-3 mx-auto" style="background: #607EAA; width:40%;">
+        <div class="col-md-6 rounded-3 mx-auto" style="background: #607EAA; width:30%;">
             <div class="container ">
                 <div class="row">
                     <div class="col-md-12">
-                        <h1 class="text-center px-5 fs-4 my-3 fw-bold" style="color:#F9F5EB;">LOGIN</h1>
+                        <h1 class="text-center px-5 fs-4 my-5 fw-bold" style="color:#F9F5EB;">LOGIN</h1>
                         <form action="/login" method="POST">
                             {% csrf_token %}
                             <div class="form-group mt-3">
@@ -27,16 +27,16 @@
                             </div>
                             <button type="submit" id="btn1" class="btn  mt-3" style="width:100%; background:#1C3879; color:white;">LOGIN</button>
                         </form>
-                        <hr> <center>
-                            <h6 class="text-light">Login with OTP</h6><center> <hr>
-                        <form action = "getotp" method="POST">
+                        <center>
+                            New User?<a class="text-light" href="signup">Sign Up</a><center> 
+                        {% comment %} <form action = "getotp" method="POST">
                             {% csrf_token %}
                             <div class="form-group mt-3">
                                 <input type="mobile" style="background:#D9D9D9" placeholder = "Mobile Number" class="form-control" id="" name="phone">
                                 
                             </div>
                             <button type="submit" id ="btn" class="btn  mt-3" style="width:100%; background:#1C3879; color:white;">Send OTP</button>
-                        </form>
+                        </form> {% endcomment %}
 
                     </div>
                 </div>

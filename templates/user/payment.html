@@ -15,7 +15,7 @@
                     <form action="payment" method = "POST">
                         {% csrf_token %}
                         <input type="hidden" name="amount" value="{{total}}" id="amount">
-                        
+                        <input type="hidden" name="cart" value="{{cart}}" id ="cart">
                         <input type="radio" name="payment" value="cod" class="m-3" checked> Cash on delivery <br>
                         <input type="radio" name="payment" value="card" class="m-3"> Card<br>
                         <input type="radio" name="payment" value="netbanking" class="m-3"> Netbanking<br>

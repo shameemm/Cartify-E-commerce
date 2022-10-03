@@ -1,0 +1,61 @@
+{% extends 'user/base.html'%} {% block content%}
+
+
+<div class = "d -flex container">
+    <div class="row my-5 ">
+        
+        <div class="col-md-12">
+            <div class="card ">
+                <div class="card-header">
+                    <h4>My Orders</h4>
+                </div>
+                {% for order in orders %}
+                <div class="card-body">
+                    <p>Order ID: {{order.id}} <p>           <p>Order Date: {{order.ordered_date}}</p>
+                    {% comment %} <h6>Order Date: {{order.ordered_date}}</h6> {% endcomment %}
+                    <div class="d-flex">
+                        <div class="col-md-4">
+                            <h6><b>Order Items</b></h6>
+                            <ul >
+                                {% for cart in cart %}
+                                <li>{{cart.product.name}} - {{cart.quantity}} - {{cart.product.price}}</li>
+
+                                {% endfor %}
+                                <br>
+                                <h5>Total: {{order.amount}}</h5>
+                            </ul>
+                        </div>
+                        <div class ="col-md-4">
+                            <h6><b>Shipping Address</b></h6>
+                            <ul type="None">
+                                <li>{{order.address.name}}</li>
+                                <li>{{order.address.address}}</li>
+                                <li>{{order.address.phone}}</li>
+                                <li>{{order.address.city}}</li>
+                                <li>{{order.address.state}}</li>
+                                <li>{{order.address.pincode}}</li>
+                                <li></li>
+                            </ul>
+                    </div>
+                    <div>
+                        <h6><b>Payment Method</b></h6>
+                        <p>{{order.method}}</p> 
+                        <br>
+                        <h6><b>Order Status</b></h6>
+                        <p>{{order.status}}</p>
+                        <a href="cancelorder?id={{order.id}}" class="btn text-light" style="background: #1C3879; ">Cancel Order</a>
+                    </div>
+                    <hr>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        
+    </div>
+    
+
+</div>
+{%endblock%}

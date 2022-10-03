@@ -7,6 +7,7 @@ class Cart(models.Model):
     quantity = models.IntegerField(default=1)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    cancel = models.BooleanField(default=False)
     
     
     def __str__(self):
@@ -25,9 +26,9 @@ class Address(models.Model):
         return self.user.username    
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    # product = models.ForeignKey(Product, on_delete=models.CASCADE)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
+    # quantity = models.IntegerField(default=1)
     ordered_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, default='pending')
     amount = models.FloatField(default=1)
