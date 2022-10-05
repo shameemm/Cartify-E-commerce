@@ -1,18 +1,5 @@
 {% extends 'admins/admin_base.html' %}{% block content %}
-<nav class="navbar " style="background: #F9F7F7;    ">
-    <div class="container d-flex">
-      <a class="navbar-brand" style="color: #655C56;" href="#">
-        <b>ecommerce</b>
-        {% comment %} <img src="/docs/5.0/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24"> {% endcomment %}
-      </a>
-      <div class="d-flex">
-      <a class="nav-link " style="color: #655C56;" href="users">Users</a>
-      <a class="nav-link " style="color: #655C56;" href="products">Products</a>
-      <a class="nav-link " style="color: #655C56;" href="category">Category</a>
-      <a class="nav-link " style="color: #655C56;" href="adminlogout">Logout</a>
-      </div>
-    </div>
-  </nav>
+
     
 <div class="container">
     
@@ -55,7 +42,11 @@
                             <td>{{product.category.name}}</td>
                             <td>{{product.description}}</td>
                             <td><a class="btn btn-primary" href="editproduct?id={{product.id}}">Edit</a></td>
-                            <td><a class="btn btn-danger" href="deleteproduct?id={{product.id}}">Delete</a></td>
+                            <td>
+                                {% comment %} <a class="btn btn-danger" href="deleteproduct?id={{product.id}}">Delete</a> {% endcomment %}
+                                <a class="btn btn-danger" href= "deleteproduct?id={{product.id}}"><i style=""onclick="return confirm('Are you sure to block '+' {{product.name}} ?')"</i>
+                                Delete</a></td>
+                            
                         </tr>
                         {% endfor %}
                     </tbody>

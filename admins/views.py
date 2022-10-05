@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import *
+from users.models import *
 import os
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User, auth
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 def adminlogin(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.is_superuser:
         return redirect('adminhome')
     if request.method == 'POST':
         username = request.POST['username']
@@ -93,6 +94,11 @@ def products(request):
     product=Product.objects.all()
     
     return render(request, 'admins/product_management.html',{'products':product})
+@login_required(login_url='adminlogin')
+def order(request):
+    order = Order.objects.all()
+    cart = Cart.objects.all()
+    return render(request, 'admins/ordermanagement.html',{'orders':order,'carts':cart})
 
 @login_required(login_url='adminlogin')
 def delete_product(request):

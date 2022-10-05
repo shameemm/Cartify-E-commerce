@@ -29,12 +29,14 @@ def login(request):
     elif request.method=='POST' and 'otp' in request.POST:
         otp = request.POST['otp']
         username = request.POST['username']
+        print(username)
         password = request.POST['password']
+        print(password)
         if Accounts.objects.filter(otp=otp).exists():
             user = auth.authenticate(request, username=username, password=password)
             print("user = ",user)
-            auth.login(request, user)
-            return redirect('index')
+            
+            
         if user is not None  and user.is_active and user.is_superuser==False:
             auth.login(request, user)
             return redirect('index')
@@ -54,8 +56,12 @@ def index(request):
     else:
         return render(request, 'user/home.html',{'products':product,'categories':categories})
 
+def otpgenerate():
+    otp=random.randint(100000,999999)
+    return otp
 def signup(request):
-    if request.method == 'POST':
+    # print("GEN=",otp)
+    if request.method == 'POST' and 'otp' not in request.POST:
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         phone = request.POST['phone']
@@ -65,14 +71,32 @@ def signup(request):
         if User.objects.filter(username=username).exists():
             messages.info(request, 'Username Taken')
             return redirect('signup')
+        elif User.objects.filter(email=email).exists():
+            messages.info(request, 'Email Taken')
+            return redirect('signup')
+        else:
+            # otp=random.randint(100000,999999)
+            otp = otpgenerate()
+            print(otp)
+            
+            message_handler = MessageHandler(phone,otp).sent_otp_on_phone()
+            return render(request, "user/otpsignup.html")
+    elif request.method == 'POST' and 'otp' in request.POST:
+        # print("otp=",otp)
         
-        user = User.objects.create_user(first_name=first_name, last_name=last_name,  username=username, email=email, password=password)
-        user.save()
-        user_id = User.objects.get(username=username)
-        account = Accounts.objects.create(user=user_id, phone=phone)
-        account.save()
+        otp1=request.POST['otp']
+        # print("otp1=",otp1)
+        if otp == otp1:     
+            user = User.objects.create_user(first_name=first_name, last_name=last_name,  username=username, email=email, password=password)
+            user.save()
+            user_id = User.objects.get(username=username)
+            account = Accounts.objects.create(user=user_id, phone=phone)
+            account.save()
         
-        return redirect('login')
+            return redirect('login')
+        else:
+            messages.info(request, "Invalid Otp")
+            return render(request, 'user/otplogin.html')
     else:
         return render(request, 'user/signup.html')
     
@@ -129,9 +153,12 @@ def otplogin(request):
 def cart(request):
     if request.user.is_authenticated:
         user=request.user
-        
         cart= Cart.objects.filter(user=user) 
+    
+        
+        
         for i in range(len(cart)):
+            
             if cart[i].quantity<1:
                 cart[i].delete()
         if len(cart)==0:
@@ -140,8 +167,9 @@ def cart(request):
         else:
             subtotal=0
             for i in range(len(cart)):
-                x=cart[i].product.price*cart[i].quantity
-                subtotal=subtotal+x
+                if cart[i].cancel!=True:
+                    x=cart[i].product.price*cart[i].quantity
+                    subtotal=subtotal+x
             shipping = 0
             total = subtotal+ shipping
             return render(request, 'user/cart.html',{'cart':cart,'subtotal':subtotal,'total':total})
@@ -178,7 +206,7 @@ def payment(request):
         method=request.POST['payment']   
         amount = request.POST['amount']
         cart = Cart.objects.filter(user=user)
-        address = Address.objects.get(user=user)
+        address = Address.objects.filter(user=user)
         # crt = Cart.objects.get(user=user)
         print(cart)
         subtotal=0
@@ -187,10 +215,21 @@ def payment(request):
             subtotal=subtotal+x
         shipping = 0
         total = subtotal+ shipping
-        
+        crt = Cart.objects.filter(user=user)
+        n=len(address)
         print(method)
-        order = Order.objects.create(user=user,address=address, amount=total, method=method)
-        return JsonResponse({'method':method})
+        order = Order.objects.create(user=user,address=address[n-1], amount=total, method=method)
+        order.save()
+        
+        for i in range(len(cart)):
+            oldcart = OldCart.objects.create(user=user,quantity=crt[i].quantity,product=crt[i].product,order=order)
+            oldcart.save()
+            
+        cart.delete()
+        success =True
+        product = Product.objects.all()
+        categories = Category.objects.all()
+        return render(request,'user/home.html',{'user':user,'products':product, 'categories':categories,'success':success})
     else:
         user = request.user
         cart = Cart.objects.filter(user=user)
@@ -206,13 +245,18 @@ def payment(request):
 def myorder(request):
     order = Order.objects.filter(user=request.user)
     cart = Cart.objects.filter(user=request.user)
+    oldcart = OldCart.objects.filter(user=request.user)
+    # print(oldcart[1].product)
+    if len(order)==0:
+        empty="No Order Placed"
+        return render(request, 'user/orders.html',{'empty':empty})
     subtotal=0
     for i in range(len(cart)):
         x=cart[i].product.price*cart[i].quantity
         subtotal=subtotal+x
     shipping = 0
     total = subtotal+ shipping
-    return render(request, 'user/orders.html',{'orders':order, 'cart':cart, 'total':total})
+    return render(request, 'user/orders.html',{'orders':order, 'cart':oldcart, 'total':total})
 
 @login_required(login_url='login')   
 def addtocart(request):
@@ -235,7 +279,9 @@ def cancelorder(request):
     user=request.user
     id=request.GET['id']
     Order.objects.filter(id=id).update(status='Cancelled')
-    Cart.objects.filter(user=user).update(cancel="True")
+    cart = Cart.objects.filter(user=user)
+    oldcart=Cart.objects.create(product=cart.product,user=user,quantity=cart.quantity)
+    Cart.objects.filter(user=user).delete()
     return redirect('myorder')
 def logout(request):
     # user=request.user

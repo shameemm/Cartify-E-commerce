@@ -16,10 +16,10 @@
                         {% csrf_token %}
                         <input type="hidden" name="amount" value="{{total}}" id="amount">
                         <input type="hidden" name="cart" value="{{cart}}" id ="cart">
-                        <input type="radio" name="payment" value="cod" class="m-3" checked> Cash on delivery <br>
-                        <input type="radio" name="payment" value="card" class="m-3"> Card<br>
-                        <input type="radio" name="payment" value="netbanking" class="m-3"> Netbanking<br>
-                        <input type="radio" name="payment" value="upi" class="m-3"> UPI<br>
+                        <input type="radio" name="payment" value="Cash On Deivery" class="m-3" checked> Cash on delivery <br>
+                        <input type="radio" name="payment" value="Card" class="m-3"> Card<br>
+                        <input type="radio" name="payment" value="Net Banking" class="m-3"> Netbanking<br>
+                        <input type="radio" name="payment" value="UPI" class="m-3"> UPI<br>
                         <button type="submit " class="btn text-light " style="width: 50%; float:right; background:#1C3879;">Place Order</button>
                     </div>
                 </div>

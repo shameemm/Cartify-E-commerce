@@ -12,6 +12,7 @@ class Cart(models.Model):
     
     def __str__(self):
         return self.product.name
+    
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     #  order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -48,7 +49,16 @@ class Order(models.Model):
     
 #     def __str__(self):
 #         return self.user.username
+
+class OldCart(models.Model):
+    quantity = models.IntegerField(default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    cancel = models.BooleanField(default=False)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, default=0)
     
+    def __str__(self):
+        return self.product.name
     
 
     

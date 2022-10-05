@@ -2,28 +2,31 @@
 
 
 <div class = "d -flex container">
-    <div class="row my-5 ">
+    <div class="row  my-5">
         
         <div class="col-md-12">
             <div class="card ">
                 <div class="card-header">
                     <h4>My Orders</h4>
                 </div>
+                {% if empty %}{% endif %}
                 {% for order in orders %}
+                
                 <div class="card-body">
-                    <p>Order ID: {{order.id}} <p>           <p>Order Date: {{order.ordered_date}}</p>
-                    {% comment %} <h6>Order Date: {{order.ordered_date}}</h6> {% endcomment %}
+                    
+                    
                     <div class="d-flex">
                         <div class="col-md-4">
-                            <h6><b>Order Items</b></h6>
-                            <ul >
-                                {% for cart in cart %}
+                            <p>Order ID: {{order.id}} <p>           <p>Order Date: {{order.ordered_date}}</p>
+                             {% comment %} <h6><b>Order Items</b></h6>
+                            <ul > {% endcomment %}
+                                {% comment %} {% for cart in cart %}
                                 <li>{{cart.product.name}} - {{cart.quantity}} - {{cart.product.price}}</li>
 
-                                {% endfor %}
+                                {% endfor %} {% endcomment %}
                                 <br>
                                 <h5>Total: {{order.amount}}</h5>
-                            </ul>
+                            </ul> 
                         </div>
                         <div class ="col-md-4">
                             <h6><b>Shipping Address</b></h6>
@@ -34,7 +37,7 @@
                                 <li>{{order.address.city}}</li>
                                 <li>{{order.address.state}}</li>
                                 <li>{{order.address.pincode}}</li>
-                                <li></li>
+                                
                             </ul>
                     </div>
                     <div>
@@ -43,13 +46,17 @@
                         <br>
                         <h6><b>Order Status</b></h6>
                         <p>{{order.status}}</p>
-                        <a href="cancelorder?id={{order.id}}" class="btn text-light" style="background: #1C3879; ">Cancel Order</a>
+                        
+                        {% comment %} <a href="cancelorder?id={{order.id}}" class="btn text-light" style="background: #1C3879; ">Cancel Order</a> {% endcomment %}
+                        <a class="btn text-light" href= "cancelorder?id={{order.id}}" style="background: #1C3879; "><i style=""onclick="return confirm('Are you sure to cancel the order ?')"></i>
+                            Cancel Order</a></td>
                     </div>
-                    <hr>
-                    {% endfor %}
+                    
                 </div>
+                <hr>
+                   
             </div>
-            
+            {% endfor %}
             
         </div>
         

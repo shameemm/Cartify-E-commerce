@@ -13,6 +13,8 @@
                 <div class="card-body">
                     <h2>{{empty}}</h2>
                         {% for cart in cart %}
+                        {% if cart.cancel %}
+                        {% else %}
                         <div class=" .product_data">
                             <div class="">
                                 <div class=" d-flex">
@@ -36,11 +38,13 @@
                                 </div>
                             </div>
                         </div>
+                        {% endif %}
                         {% endfor %}
                     </div>
                 </div>
             </div>
-            {% if empty %}
+            {% if empty  %}
+
 
             {% else %}
             <div class= "col-md-3">
@@ -63,10 +67,14 @@
                                 <td>₹{{total}}/-</td>
                             </tr>
                         </table>
+                        {% if total %}
                         <a href="checkout" class="btn btn-primary" style="width:100%; background:#1C3879;">Checkout</a>
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
+                
+
         </div>
         
         

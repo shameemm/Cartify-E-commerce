@@ -1,0 +1,66 @@
+
+{% extends 'user/base.html'%} {% block content%}
+{% load static %}
+
+  <div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="https://assets.streamlinehq.com/image/private/w_400,h_400,ar_1/f_auto/l_watermark_mnkze9/o_30/c_scale,w_181/fl_layer_apply,x_0,y_133/v1/icons/illustrations-brooklyn/interface/interface/enter-password-5-tq6m8iajifyg6gfdbux9f.png" alt="" width="75%" height="80%">
+        </div>
+        <div class="col-md-6 rounded-3 mx-auto d-flex" style="background: #607EAA; width:40%; height:100%;">
+            <div class="container ">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center px-5 fs-4 my-3 fw-bold" style="color:#F9F5EB;">LOGIN</h1>
+                        
+                            
+                        <form action = "signup" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group mt-3">
+                                {% comment %} <input type="hidden" name="username" value= "{{username}}" id="username">
+                                <input type="hidden" name="password" value="{{password}}" id="password"> {% endcomment %}
+                                <input type="mobile" style="background:#D9D9D9" placeholder = "Enter the OTP" class="form-control" id="" name="otp">
+                                
+                            </div>
+                            <button type="submit" id ="btn" class="btn  mt-3 mb-3" style="width:100%; background:#1C3879; color:white;">LOGIN</button>
+                            {% for message in messages %}
+                            <span class= "text-danger"> {{message}}</span>{% endfor %}
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" >
+    $('#btn1').click(()=>{
+        console.log('clicked')
+        var username = $('#username').val()
+        var password = $('#password').val()
+    
+        
+        
+        
+        
+        if (username.length == 0){
+            $('#error1').html('Enter a valid username')
+            return false
+        }
+       
+        else if(password.length < 8){
+            $('#error').html('Password must be atleast 8 characters')
+            return false
+        }
+        else{
+            $('#error').html('')
+            $('#error1').html('')
+            
+            return true
+        }
+        
+    })
+
+</script>
+{%endblock%}
+
