@@ -33,7 +33,9 @@ class Order(models.Model):
     ordered_date = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=100, default='pending')
     amount = models.FloatField(default=1)
-    method = models.CharField(max_length=100, default='cod')
+    method = models.CharField(max_length=100, default='Cash On Delivery')
+    cancel = models.BooleanField(default=False)
+    
     
     
     

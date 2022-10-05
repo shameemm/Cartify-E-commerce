@@ -50,6 +50,7 @@ def index(request):
     product=Product.objects.all()
     categories=Category.objects.all()
     if request.user.is_authenticated:
+        print(request.user.is_authenticated)
         user=request.user
         print('user=',user)
         return render(request,'user/home.html',{'user':user,'products':product, 'categories':categories})
@@ -246,6 +247,7 @@ def myorder(request):
     order = Order.objects.filter(user=request.user)
     cart = Cart.objects.filter(user=request.user)
     oldcart = OldCart.objects.filter(user=request.user)
+    print(order[0].cancel)
     # print(oldcart[1].product)
     if len(order)==0:
         empty="No Order Placed"
@@ -280,8 +282,8 @@ def cancelorder(request):
     id=request.GET['id']
     Order.objects.filter(id=id).update(status='Cancelled')
     cart = Cart.objects.filter(user=user)
-    oldcart=Cart.objects.create(product=cart.product,user=user,quantity=cart.quantity)
-    Cart.objects.filter(user=user).delete()
+    # oldcart=Cart.objects.create(product=cart.product,user=user,quantity=cart.quantity)
+    # Cart.objects.filter(user=user).delete()
     return redirect('myorder')
 def logout(request):
     # user=request.user
