@@ -22,6 +22,7 @@ urlpatterns = [
     path('deleteproduct',views.delete_product,name='delete_product'),
     path('editproduct',views.edit_product,name='edit_product'),
     path('order',views.order, name='order'),
+    path('cancelorder',views.cancelorder, name='cancelorder'),
 ]
     
 if settings.DEBUG:

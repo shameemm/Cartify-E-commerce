@@ -10,6 +10,15 @@
     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
   </symbol>
 </svg>
+<nav class="navbar navbar-expand-lg navbar-light bg-light border">
+  <div class="container d-flex ">
+    {% for category in categories %}
+    <div>
+      <a href="category/{{category.id}}" class="text-decoration-none ">{{category.name}}</a>      
+    </div>
+    {% endfor %}
+  </div>
+</nav>
 {% if success %}
 <div class="alert alert-success d-flex align-items-center" role="alert">
   <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
@@ -21,7 +30,7 @@
 
 
 <div class="d-flex m-5">
-  <div class="col-md-3">
+  {% comment %} <div class="col-md-3">
     <div class="card me-2 rounded shadow-lg border-0">
         <div class="card-header">
             <h4 style="color:">Categories</h4>
@@ -36,8 +45,8 @@
             </ul>
         </div>
     </div>
-</div>
-<div class="col-md-9">        
+</div> {% endcomment %}
+<div class="col-md-12">        
   <div class="bg-light rounded shadow-lg border-0 border-dark overflow-hidden">
       <div class="row g-0">
         <div class="col-md-6">
@@ -59,16 +68,14 @@
       </div>
     </div>
 
-    <div class="row row-cols-1 cols-md-4 mt-3">
+    <div class="row col-md-12 mt-3">
        {% for product in products %} 
-       <div class="card m-3" style="width: 18rem;">
+       <div class="card m- col-md-3 m-2" style="width: 18rem;">
         <img src=".{{product.image.url}}" class="card-img-top w-100 h-100" alt="...">
         
         <div class="card-body">
           <p class="text-secondary">{{product.brand}}</p>
           <h5 class="card-title">{{product.name}}</h5>
-          <p class="card-text">{{product.description}}</p>
-          
           <p class="card-text me-2"> ₹{{product.price}}/-</p>
           <a href="view_product?id={{product.id}}" class="btn btn-primary" style="width:100%; background:#1C3879;">View</a>
           

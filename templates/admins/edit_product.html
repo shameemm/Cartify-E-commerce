@@ -42,6 +42,12 @@
                       <label for="price">Price</label>
                       <input type="text" class="form-control" value="{{product.price}}" name="price" id="price" placeholder="Product Price">
                       <span id="errorprice" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                      <label for="Stock">Stock</label>
+                      <input type="number" class="form-control" name="quantity" id="quantity" value="{{product.quantity}}" placeholder="Product Stock">
+                      
+                    </div>
                     <div class="form-group my-4">
                         <label for="exampleFormControlTextarea1">Description</label>
                         <textarea class="form-control" name="description" value="{{product.description}}" id="description" rows="3"></textarea>

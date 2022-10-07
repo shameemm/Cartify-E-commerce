@@ -27,12 +27,14 @@
                                         <h4>{{cart.product.name}}</h4>
                                         <p>{{cart.product.description}}</p>
                                         <p>Price: ₹{{cart.product.price}}/-</p>
-                                        <p>Quantity</p>
+                                        {% comment %} <p>Quantity</p> {% endcomment %}
                                         <div class="d-flex input-group text-center ">
-                                            <div class=""><a href="minus?id={{cart.id}}" class="border btn">-</a></div>
+                                            {% comment %} <div class=""><a href="minus?id={{cart.id}}" class="border btn">-</a></div>
                                             
                                             <div><p class="mx-1">{{cart.quantity}}</p></div>
-                                            <div class=""style=""><a href="up?id={{cart.id}}" class="border btn">+</a></div>
+                                            <div class=""style=""><a href="up?id={{cart.id}}" class="border btn">+</a></div> {% endcomment %}
+                                            <div class="ms-3"><a class="btn btn-danger" href="removecart?id={{cart.id}}" ><i style=""onclick="return confirm('Are you sure to remove {{cart.product.name}} from the cart?')">Remove</i>
+                                            </a></div>
                                         </div>
                                     </div>
                                 </div>

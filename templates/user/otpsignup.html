@@ -17,8 +17,12 @@
                         <form action = "signup" method="POST">
                             {% csrf_token %}
                             <div class="form-group mt-3">
-                                {% comment %} <input type="hidden" name="username" value= "{{username}}" id="username">
-                                <input type="hidden" name="password" value="{{password}}" id="password"> {% endcomment %}
+                                <input type="hidden" name="first_name" value= "{{first_name}}" id="first_name">
+                                <input type="hidden" name="last_name" value= "{{last_name}}" id="last_name">
+                                <input type="hidden" name="email" value= "{{email}}" id="email">
+                                <input type="hidden" name="username" value= "{{username}}" id="username">
+                                <input type="hidden" name="phone" value= "{{phone}}" id="phone">
+                                <input type="hidden" name="password" value="{{password}}" id="password">
                                 <input type="mobile" style="background:#D9D9D9" placeholder = "Enter the OTP" class="form-control" id="" name="otp">
                                 
                             </div>

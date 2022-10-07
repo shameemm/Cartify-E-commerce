@@ -49,8 +49,8 @@
                         {% if order.cancel %}<p>Order Cancelled</p>
                         {% comment %} <p>Order Cancelled</p> {% endcomment %}
                         {% else %}
-                        <a class="btn text-light" href= "cancelorder?id={{order.id}}" style="background: #1C3879; "><i style=""onclick="return confirm('Are you sure to cancel the order ?')"></i>
-                            Cancel Order</a>
+                        <a class="btn text-light" href= "cancelorder?id={{order.id}}" style="background: #1C3879; "><i style=""onclick="return confirm('Are you sure to cancel the order ?')">Cancel Order</i>
+                            </a>
                         {% endif %}
 
                     </div>

@@ -16,7 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TWILIO_ACCOUNT_SID='ACb7ac82c347a5d2e34be2163cf2b46607'
-TWILIO_AUTH_TOKEN='2a5cb75b4d55a33cae6836279bde78ce'
+TWILIO_AUTH_TOKEN='dbedb505bc22d0f547ffb6e68da11cea'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms'
+    'crispy_forms',
+    'cropperjs',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'

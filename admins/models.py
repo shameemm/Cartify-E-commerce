@@ -1,5 +1,5 @@
 from django.db import models
-
+from cropperjs.models import CropperImageField
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -18,6 +18,19 @@ class Product(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	@property
+	def imageURL(self):
+		try:
+			url = self.image.url
+		except:
+			url = ''
+		return url
+class Images(models.Model):
+	image = models.ImageField(null=True, blank=True,upload_to='assets/images')
+	product = models.ForeignKey(Product, on_delete=models.CASCADE)
+	def __str__(self):
+		return self.image.url
 
 	@property
 	def imageURL(self):

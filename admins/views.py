@@ -77,11 +77,12 @@ def addproduct(request):
         price = request.POST['price']
         category = request.POST['category']
         brand = request.POST['brand']
+        quantity = request.POST['quantity']
         print(request.FILES,"  1111")
         image = request.FILES['image']
         
         category=Category.objects.get(id=category)
-        product = Product.objects.create(name=name,description=description,price=price,category=category,image=image,brand=brand)
+        product = Product.objects.create(name=name,description=description,price=price,category=category,image=image,brand=brand,quantity=quantity)
         product.save()
         return redirect('products')
     else:
@@ -89,6 +90,15 @@ def addproduct(request):
         category=Category.objects.all()
         return render(request, 'admins/add_product.html',{'categories':category})
     
+def cancelorder(request):
+    user=request.user
+    id=request.GET['id']
+    Order.objects.filter(id=id).update(status='Cancelled',cancel=True)
+    
+    
+    return redirect('order')
+
+
 @login_required(login_url='adminlogin')
 def products(request):
     product=Product.objects.all()
@@ -123,6 +133,7 @@ def edit_product(request):
         brand = request.POST['brand']
         print(request.FILES,"  1111")
         image = request.FILES['image']
+        quantity = request.POST['quantity']
         
         category=Category.objects.get(id=category)
         product = Product.objects.get(id=id)
@@ -131,7 +142,7 @@ def edit_product(request):
         product.price=price
         product.category=category
         product.brand=brand
-        
+        product.quantity=quantity
         product.image=image
         product.save()
         

@@ -14,7 +14,7 @@
                         <tr>
                             <th>Order ID</th>
                             <th>Customer</th>
-                            <th>Products</th>
+                            {% comment %} <th>Products</th> {% endcomment %}
                             <th>Order Date</th>
                             <th>Amount</th>
                             <th>Payment Method</th>
@@ -29,15 +29,21 @@
                         <tr>
                             <td>{{order.id}}</td>
                             <td>{{order.user.username}}</td>
-                            <td>{%for cart in carts%}
+                            {% comment %} <td>{%for cart in carts%}
                                 {{cart.product.name}}<br>
                                 {%endfor%}
-                            </td>
+                            </td> {% endcomment %}
                             <td>{{order.ordered_date}}</td>
                             <td>{{order.amount}}</td>
                             <td>{{order.method}}</td>
                             <td>{{order.status}}</td>
-                            <td><a href="" class="btn btn-danger">Cancel</a></td>
+                            {% if order.cancel %}
+                            <td>Order Canceled</td>
+                            {% else %}
+                            <td>
+                                <a class="btn btn-danger" href= "cancelorder?id={{order.id}}" ><i style=""onclick="return confirm('Are you sure to cancel the order ?')">Cancel Order</i>
+                                    </a></td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>

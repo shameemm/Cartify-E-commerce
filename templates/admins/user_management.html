@@ -34,8 +34,8 @@
                                     
                                     {% if user.is_active %}
                                     
-                                    <a style=" background:#CCEDD2; " class="btn" href= "block?id={{user.id}}"><i style=""onclick="return confirm('Are you sure to block '+' {{user.username}} ?')"</i>
-                                        Block</a>
+                                    <a style=" background:#CCEDD2; " class="btn" href= "block?id={{user.id}}"><i style=""onclick="return confirm('Are you sure to block '+' {{user.username}} ?')">Block</i>
+                                        </a>
                                     {% else %}
                                    
                                     <a style="background:#CCEDD2;" class="btn" href= "unblock?id={{user.id}}"><i style="y"onclick="return confirm('Are you sure to unblock '+' {{user.username}} ?')"</i>
