@@ -31,11 +31,14 @@ def login(request):
         otp = request.POST['otp']
         username = request.POST['username']
         print(username)
+        
         password = request.POST['password']
+        user = User.objects.get(username=username)
+        print(user)
         print(password)
         if Accounts.objects.filter(otp=otp).exists():
             user = auth.authenticate(
-                request, username=username, password=password)
+                request, username=username,password=password)
             print("user = ", user)
 
         if user is not None and user.is_active and user.is_superuser == False:
@@ -47,10 +50,14 @@ def login(request):
     else:
         return render(request, 'user/login.html')
 
-
+def buynow(request):
+    id=request.GET['pid']
+    print(id)
+    return redirect('checkout')
 def index(request):
     product = Product.objects.all()
     categories = Category.objects.all()
+    
     if request.user.is_authenticated:
         print(request.user.is_authenticated)
         user = request.user
@@ -122,11 +129,16 @@ def removecart(request):
     cart = Cart.objects.get(id=id)
     cart.delete()
     return redirect('cart')
+
 def view_product(request):
     id = request.GET['id']
     product = Product.objects.get(id=id)
-    return render(request, 'user/view_product.html', {'product': product})
-
+    print(product)
+    prdct = Product.objects.filter(id=id)
+    print(prdct)
+    images = Images.objects.filter(product=prdct[0].id)
+    print(images)
+    return render(request, 'user/view_product.html', {'product': product, 'images':images})
 
 def minus(request):
     id = request.GET['id']
@@ -135,7 +147,6 @@ def minus(request):
     print(qty)
     Cart.objects.filter(id=id).update(quantity=qty)
     return redirect('cart')
-
 
 def up(request):
     id = request.GET['id']
@@ -168,10 +179,14 @@ def otplogin(request):
     id = request.GET['id']
     otp = request.POST['otp']
     user = User.objects.get(id=id)
+    print(user)
     print(user.accounts.phone)
+    print(user.username)
+    print(user.password)
     if Accounts.objects.filter(otp=otp).exists():
         user = auth.authenticate(
-            request, username=user.username, password=user.password)
+            request, username=user.username)
+        print("user=",user)
         auth.login(request, user)
         return redirect('index')
     else:

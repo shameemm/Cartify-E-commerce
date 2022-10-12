@@ -19,6 +19,7 @@
                             <th>Amount</th>
                             <th>Payment Method</th>
                             <th>Order Status</th>
+                            <th>Update</th>
                             <th>Cancel Order</th>
                             
                         </tr>
@@ -37,6 +38,22 @@
                             <td>{{order.amount}}</td>
                             <td>{{order.method}}</td>
                             <td>{{order.status}}</td>
+
+                            <td>{% if order.cancel %}
+                                Order Canceled
+                                {% else %}
+                                <form action="updatestatus?id={{order.id}}" method="POST">
+                                {% csrf_token %}
+                                    <select name="status" class="" id="status">
+                                        <option value="Pending">Pending</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Out for Delivery">Out for Delivery</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </form>
+                                
+                                {% endif %}
+                            </td>
                             {% if order.cancel %}
                             <td>Order Canceled</td>
                             {% else %}

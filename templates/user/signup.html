@@ -73,13 +73,10 @@
             return false;  
         }
         else if(phone.length != 13){
-           $('#error').html('Enter a valid phone number')
-            return false
-        }
-        else if(typeof phone!="number"){
             $('#error').html('Enter a valid phone number')
             return false
         }
+        
         
         else if(password1.length < 8){
             $('#error').html('Password must be atleast 8 characters')

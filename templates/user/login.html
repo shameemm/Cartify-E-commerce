@@ -22,22 +22,22 @@
                                 <input type="password" style="background:#D9D9D9" placeholder = "Password" class="form-control" id="password" name="password">
                                 <span id="error" class="text-light"></span>
                                 {%for message in messages%}
-                        <h6 class="text-light ">{{message}}</h6>
-              {% endfor %}
+                                <h6 class="text-light ">{{message}}</h6>
+                                {% endfor %}
                             </div>
                             <button type="submit" id="btn1" class="btn  mt-3" style="width:100%; background:#1C3879; color:white;">LOGIN</button>
                         </form>
+                        <br>
                         <center>
                             New User?<a class="text-light" href="signup">Sign Up</a><center> 
-                        {% comment %} <form action = "getotp" method="POST">
+                                <hr><h1 class="text-center px-5 fs-5 my-2 fw-bold" style="color:#F9F5EB;">LOGIN with OTP</h1>
+                        <form action = "getotp" method="POST">
                             {% csrf_token %}
                             <div class="form-group mt-3">
                                 <input type="mobile" style="background:#D9D9D9" placeholder = "Mobile Number" class="form-control" id="" name="phone">
-                                
                             </div>
-                            <button type="submit" id ="btn" class="btn  mt-3" style="width:100%; background:#1C3879; color:white;">Send OTP</button>
-                        </form> {% endcomment %}
-
+                            <button type="submit" id ="btn" class="btn mb-4 mt-3" style="width:100%; background:#1C3879; color:white;">Send OTP</button>
+                        </form>     
                     </div>
                 </div>
             </div>

@@ -23,6 +23,7 @@ urlpatterns = [
     path('editproduct',views.edit_product,name='edit_product'),
     path('order',views.order, name='order'),
     path('cancelorder',views.cancelorder, name='cancelorder'),
+    path('updatestatus',views.updatestatus, name='updatestatus'),
 ]
     
 if settings.DEBUG:

@@ -21,6 +21,7 @@ urlpatterns = [
     path('myorder',views.myorder,name='myorder'),
     path('cancelorder',views.cancelorder,name='cancelorder'),
     path('removecart',views.removecart,name='removecart'),
+    path('buynow',views.buynow,name='buynow'),
 ]
 
 if settings.DEBUG:

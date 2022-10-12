@@ -80,10 +80,21 @@ def addproduct(request):
         quantity = request.POST['quantity']
         print(request.FILES,"  1111")
         image = request.FILES['image']
-        
+        image1 = request.FILES['image1']
+        image2 = request.FILES['image2']
+        image3 = request.FILES['image3']
+        print(image1,"  2222")
         category=Category.objects.get(id=category)
+        # image = Images.objects.create(image=image,product=product)
         product = Product.objects.create(name=name,description=description,price=price,category=category,image=image,brand=brand,quantity=quantity)
         product.save()
+        
+        image1 = Images.objects.create(image=image1,product=product)
+        image1.save()
+        image2 = Images.objects.create(image=image2,product=product)
+        image2.save()
+        image3 = Images.objects.create(image=image3,product=product)
+        image3.save()
         return redirect('products')
     else:
         
@@ -133,6 +144,9 @@ def edit_product(request):
         brand = request.POST['brand']
         print(request.FILES,"  1111")
         image = request.FILES['image']
+        image1 = request.FILES['image1']
+        image2 = request.FILES['image2']
+        image3 = request.FILES['image3']
         quantity = request.POST['quantity']
         
         category=Category.objects.get(id=category)
@@ -159,6 +173,14 @@ def block(request):
     user.is_active=False
     user.save()
     return redirect('users')
+
+def updatestatus(request):
+    id=request.GET['id']
+    status=request.POST['status']
+    print(id,status)
+    Order.objects.filter(id=id).update(status=status)
+    return redirect('order')
+
 @login_required(login_url='adminlogin')
 def unblock(request):
     id=request.GET['id']

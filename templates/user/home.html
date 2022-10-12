@@ -29,7 +29,7 @@
 {% endif %}
 
 
-<div class="d-flex m-5">
+<div class="d-flex my-3 mx-5">
   {% comment %} <div class="col-md-3">
     <div class="card me-2 rounded shadow-lg border-0">
         <div class="card-header">
@@ -68,17 +68,15 @@
       </div>
     </div>
 
-    <div class="row col-md-12 mt-3">
+    <div class="row col-md-12 mt-3 m-3">
        {% for product in products %} 
        <div class="card m- col-md-3 m-2" style="width: 18rem;">
-        <img src=".{{product.image.url}}" class="card-img-top w-100 h-100" alt="...">
-        
+        <img src=".{{product.image.url}}" class=" w-100 h-100" alt="...">
         <div class="card-body">
           <p class="text-secondary">{{product.brand}}</p>
           <h5 class="card-title">{{product.name}}</h5>
           <p class="card-text me-2"> ₹{{product.price}}/-</p>
           <a href="view_product?id={{product.id}}" class="btn btn-primary" style="width:100%; background:#1C3879;">View</a>
-          
         </div>
       </div>
           
