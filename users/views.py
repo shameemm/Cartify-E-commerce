@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User, auth
+from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from accounts.models import Accounts
@@ -18,28 +19,8 @@ def login(request):
     if request.method == 'POST' and 'username' in request.POST and 'password' in request.POST and 'otp' not in request.POST:
         username = request.POST['username']
         password = request.POST['password']
-        user = User.objects.get(username=username)
-        phone = user.accounts.phone
-        user = auth.authenticate(request, username=username, password=password)
-        otp = random.randint(100000, 999999)
-        print(otp)
-        numb = Accounts.objects.filter(phone=phone).update(otp=otp)
-        phone = '+91'+str(phone)
-        message_handler = MessageHandler(phone, otp).sent_otp_on_phone()
-        return render(request, 'user/otplogin.html', {'username': username, 'password': password})
-    elif request.method == 'POST' and 'otp' in request.POST:
-        otp = request.POST['otp']
-        username = request.POST['username']
-        print(username)
         
-        password = request.POST['password']
-        user = User.objects.get(username=username)
-        print(user)
-        print(password)
-        if Accounts.objects.filter(otp=otp).exists():
-            user = auth.authenticate(
-                request, username=username,password=password)
-            print("user = ", user)
+        user = auth.authenticate(request, username=username, password=password)
 
         if user is not None and user.is_active and user.is_superuser == False:
             auth.login(request, user)
@@ -52,8 +33,10 @@ def login(request):
 
 def buynow(request):
     id=request.GET['pid']
-    print(id)
-    return redirect('checkout')
+    price = Product.objects.get(id=id).price
+    addresses = Address.objects.filter(user=request.user)
+    cart=Cart.objects.create(user=request.user,product_id=id,quantity=1)
+    return render(request,'user/checkout.html',{'price':price,'addresses':addresses})
 def index(request):
     product = Product.objects.all()
     categories = Category.objects.all()
@@ -184,8 +167,8 @@ def otplogin(request):
     print(user.username)
     print(user.password)
     if Accounts.objects.filter(otp=otp).exists():
-        user = auth.authenticate(
-            request, username=user.username)
+        # user = auth.authenticate(
+        #     request, username=user.username)
         print("user=",user)
         auth.login(request, user)
         return redirect('index')
@@ -222,21 +205,41 @@ def cart(request):
 
 @login_required(login_url='login')
 def checkout(request):
-    if request.method == 'POST':
-        user = request.user
-        name = request.POST['name']
-        phone = request.POST['phone']
-        address = request.POST['address']
-        city = request.POST['city']
-        state = request.POST['state']
-        pincode = request.POST['pincode']
-        address = Address.objects.create(
-            name=name, phone=phone, address=address, city=city, state=state, pincode=pincode, user=user)
-        address.save()
-        return redirect('payment')
+    
+    if request.method == 'POST' :
+        if 'address_id' in request.POST:
+            
+            address_id = request.POST['address_id']
+            address = Address.objects.get(id=address_id)
+            cart = Cart.objects.filter(user=request.user)
+            subtotal = 0
+            for i in range(len(cart)):
+                x = cart[i].product.price*cart[i].quantity
+                subtotal = subtotal+x
+            shipping = 0
+            total = subtotal+shipping
+            return render(request, 'user/payment.html', {'subtotal': subtotal, 'total': total, 'addresses': address})
+        else:
+            user = request.user
+            name = request.POST['name']
+            phone = request.POST['phone']
+            address = request.POST['address']
+            city = request.POST['city']
+            state = request.POST['state']
+            pincode = request.POST['pincode']
+            address = Address.objects.create(
+                name=name, phone=phone, address=address, city=city, state=state, pincode=pincode, user=user)
+            address.save()
+            return redirect('payment')
+    # elif request.method == 'POST' and 'address_id' in request.POST:
+    #     address_id = request.POST['address_id']
+    #     address = Address.objects.get(id=address_id)
+    #     return render(request, 'user/payment.html', {'address': address})
     else:
         user = request.user
         cart = Cart.objects.filter(user=user)
+        addresses = Address.objects.filter(user=user)
+        print(addresses)
         print(cart)
         subtotal = 0
         for i in range(len(cart)):
@@ -244,7 +247,7 @@ def checkout(request):
             subtotal = subtotal+x
         shipping = 0
         total = subtotal+shipping
-        return render(request, 'user/checkout.html', {'subtotal': subtotal, 'total': total})
+        return render(request, 'user/checkout.html', {'subtotal': subtotal, 'total': total, 'addresses': addresses})
 
 
 def payment(request):
@@ -253,13 +256,16 @@ def payment(request):
         method = request.POST['payment']
         amount = request.POST['amount']
         cart = Cart.objects.filter(user=user)
-        address = Address.objects.filter(user=user)
+        
+        address = request.POST['address']
+        print("address",address)
+        address = Address.objects.get(id=address)
         prdct = Product.objects.all()
-        print(cart[0].quantity)
+        # print(cart[0].quantity)
         
         
         # crt = Cart.objects.get(user=user)
-        print(cart)
+        # print(cart)
         subtotal = 0
         for i in range(len(cart)):
             x = cart[i].product.price*cart[i].quantity
@@ -268,10 +274,10 @@ def payment(request):
         shipping = 0
         total = subtotal + shipping
         crt = Cart.objects.filter(user=user)
-        n = len(address)
+       
         print(method)
         order = Order.objects.create(
-            user=user, address=address[n-1], amount=total, method=method)
+            user=user, address=address, amount=total, method=method)
         order.save()
 
         for i in range(len(cart)):
@@ -298,11 +304,9 @@ def payment(request):
 
 @login_required(login_url='login')
 def myorder(request):
-    order = Order.objects.filter(user=request.user)
+    order = Order.objects.filter(user=request.user).order_by('-id')
     cart = Cart.objects.filter(user=request.user)
     oldcart = OldCart.objects.filter(user=request.user)
-    # print(order[0].cancel)
-    # print(oldcart[1].product)
     if len(order) == 0:
         empty = "No Order Placed"
         return render(request, 'user/orders.html', {'empty': empty})
@@ -314,6 +318,16 @@ def myorder(request):
     total = subtotal + shipping
     return render(request, 'user/orders.html', {'orders': order, 'cart': oldcart, 'total': total})
 
+def profile(request):
+    user = request.user
+    address = Address.objects.filter(user=user)
+    return render(request, 'user/profile.html', {'user': user, 'address': address})
+
+def deleteaddress(request):
+    id=request.GET['id']
+    address = Address.objects.get(id=id)
+    address.delete()
+    return redirect('profile')
 
 @login_required(login_url='login')
 def addtocart(request):

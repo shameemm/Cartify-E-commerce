@@ -71,7 +71,9 @@
                             </tr>
                         </table>
                         {% if total %}
-                        <a href="checkout" class="btn btn-primary" style="width:100%; background:#1C3879;">Checkout</a>
+                        {% for cart in cart %}
+                        <a href="checkout?id={{cart.id}}" class="btn btn-primary" style="width:100%; background:#1C3879;">Checkout</a>
+                        {% endfor %}
                         {% endif %}
                         <a class="btn text-light mt-3" href="/" style="width:100%; background:#1C3879;">Continue Shopping</a>
                     </div>

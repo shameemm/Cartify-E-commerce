@@ -39,8 +39,8 @@ class Order(models.Model):
     
     
     
-    def __str__(self):
-        return self.product.name
+    # def __str__(self):
+    #     return self.product.name
     
 # class Payment(models.Model):
 #     user = models.ForeignKey(User, on_delete=models.CASCADE)

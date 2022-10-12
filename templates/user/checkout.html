@@ -11,7 +11,29 @@
                 </div>
                 
                 <div class="card-body">
-                    <h5>Shipping Address</h5>
+                    <h5>Select Shipping Address</h5>
+                    <form action = "checkout" method="POST">
+                        {% csrf_token %}
+                        {% for address in addresses %}
+                        <input type="radio" name="address_id" value="{{address.id}}" checked> <label>
+                            <div class="card col-md-6" style="width: 18rem;">
+                            <div class="card-body">
+                              <h5 class="card-title">{{address.name}}</h5>
+                              <h6 class="card-subtitle mb-2 text-muted">{{address.phone}}</h6>
+                              <p class="card-text">{{address.address}}<br>
+                                {{address.city}}<br>
+                                {{address.pincode}}<br>
+                                {{address.state}}<br>
+                              </p>
+                            </div>
+                        </div></label>
+                        {% endfor %}
+                        <button class="btn my-2 text-light" type="submit" style="width:100%; background:#1C3879;">Select Address</button> 
+
+                    </form>
+                    <hr>
+                    <h5>Add New Address</h5>
+                    <hr>
                     <form action="checkout" method="POST">
                         {% csrf_token %}
                         <div class="form-group">
@@ -40,7 +62,7 @@
                         </div>
                         
                         <button class="btn my-2 text-light" type="submit" style="width:100%; background:#1C3879;">Add Address</button> 
-                    </form>
+                    </form> 
                     </div>
                 </div>
             </div>
@@ -54,7 +76,11 @@
                         <table class="table">
                             <tr>
                                 <td>Subtotal</td>
+                                {% if subtotal %}
                                 <td>₹{{subtotal}}/-</td>
+                                {% else %}
+                                <td>₹{{price}}/-</td>
+                                {% endif %}
                             </tr>
                             <tr>
                                 <td>Shipping</td>
@@ -62,7 +88,11 @@
                             </tr>
                             <tr>
                                 <td>Total</td>
+                                {% if total %}
                                 <td>₹{{total}}/-</td>
+                                {% else %}
+                                <td>₹{{price}}/-</td>
+                                {% endif %}
                             </tr>
                         </table>
                        

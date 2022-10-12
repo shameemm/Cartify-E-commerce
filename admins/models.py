@@ -14,7 +14,7 @@ class Product(models.Model):
 	image = models.ImageField(null=True, blank=True,upload_to='assets/images')
 	category = models.ForeignKey(Category, on_delete=models.CASCADE)
 	quantity = models.IntegerField(default=1)
- 
+
 
 	def __str__(self):
 		return self.name

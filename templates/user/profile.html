@@ -1,0 +1,42 @@
+{% extends 'user/base.html' %}
+{% block content %}
+<div class = "container border w-100 h-100 my-4 p-3" style="background:white; height:100%; width:100%">
+    <div class="d-flex">
+        
+        <img src="https://png.pngtree.com/png-vector/20190321/ourlarge/pngtree-vector-users-icon-png-image_856952.jpg" class="img-thumbnail w-25 h-25">
+        
+        <div class="my-5 mx-3" >
+            <h1 class="fw-bold">{{user.first_name}} {{user.last_name}}</h1>
+            <h6>{{user.username}}</h6>
+            <h5 class="mt-5">{{user.email}}</h5>
+            <h5>+{{user.accounts.phone}}
+        </div>
+
+    </div>
+    <hr>
+    <div class=" m-3 col-md-12">
+        <h5 class="fw-bold">Addresses</h5>
+        
+        <div class="row">
+            {% for address in address %}
+            <div class = "col-md-4 my-1">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">{{address.name}}</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">{{address.phone}}</h6>
+                      <p class="card-text">{{address.address}}<br>
+                        {{address.city}}<br>
+                        {{address.pincode}}<br>
+                        {{address.state}}<br>
+                      </p>
+                      <a href="deleteaddress?id={{address.id}}" class="card-link">Delete</a>
+                      {% comment %} <a href="#" class="card-link">Another link</a> {% endcomment %}
+                    </div>
+                  </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+</div>
+{% endblock content %}
