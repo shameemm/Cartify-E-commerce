@@ -23,6 +23,9 @@
                         <input type="radio" name="payment" value="Card" class="m-3"> Card<br>
                         <input type="radio" name="payment" value="Net Banking" class="m-3"> Netbanking<br>
                         <input type="radio" name="payment" value="UPI" class="m-3"> UPI<br>
+                        <button type="button" class="btn btn-primary payWithRazorpay" data-toggle="modal" data-target="#exampleModal">
+                            Pay With Razorpay
+                          </button>
                         <button type="submit " class="btn text-light " style="width: 50%; float:right; background:#1C3879;">Place Order</button>
                     </div>
                 </div>
@@ -60,3 +63,8 @@
 
 </div>
 {%endblock%}
+
+{% block scripts %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% endblock scripts %}

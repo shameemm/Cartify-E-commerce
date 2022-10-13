@@ -19,12 +19,12 @@
                             <div class="form-group mt-3">
                                 {% comment %} <input type="hidden" name="username" value= "{{username}}" id="username">
                                 <input type="hidden" name="password" value="{{password}}" id="password"> {% endcomment %}
-                                <input type="mobile" style="background:#D9D9D9" placeholder = "Enter the OTP" class="form-control" id="" name="otp">
-                                
+                                <input type="mobile" style="background:#D9D9D9" placeholder = "Enter the OTP" class="form-control" id="otp" name="otp">
+                                <span class="text-danger" id="error1"></span>
                             </div>
                             <button type="submit" id ="btn" class="btn  mt-3 mb-3" style="width:100%; background:#1C3879; color:white;">LOGIN</button>
                             {% for message in messages %}
-                            <span class= "text-danger"> {{message}}</span>{% endfor %}
+                            <span class= "text-danger" > {{message}}</span>{% endfor %}
                         </form>
 
                     </div>
@@ -34,22 +34,12 @@
     </div>
 </div>
 <script type="text/javascript" >
-    $('#btn1').click(()=>{
+    $('#btn').click(()=>{
         console.log('clicked')
-        var username = $('#username').val()
-        var password = $('#password').val()
-    
-        
-        
-        
-        
-        if (username.length == 0){
-            $('#error1').html('Enter a valid username')
-            return false
-        }
-       
-        else if(password.length < 8){
-            $('#error').html('Password must be atleast 8 characters')
+        var otp = $('#otp').val()
+        if (otp.length == 0 ){
+            $('#error1').html('Enter the Valid OTP')
+           //alert("safffsf")
             return false
         }
         else{

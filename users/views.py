@@ -174,7 +174,7 @@ def otplogin(request):
         return redirect('index')
     else:
         messages.info(request, "Invalid OTP")
-        return redirect('login')
+        return render(request, 'user/otplogin.html',{'user':user})
 
 
 @login_required(login_url='login')
