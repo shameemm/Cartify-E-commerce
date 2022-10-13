@@ -44,7 +44,7 @@
           <p class="mb-4 fw-bold fs-4" style="color: #4f4f4e">
             ₹{{product.price}}/-
           </p>
-          <form action="addtocart?pid={{product.id}}" method="POST">
+          {% comment %} <form action="addtocart?pid={{product.id}}" method="POST">
             {% csrf_token %}
             <div class="d-flex">
             <p class="text-dark my-auto" style=""> Quantity: </p>
@@ -53,7 +53,7 @@
             <button type="submit" class="mt-2 btn text-light" style="width:50%; background:#1C3879;">
               Add to Cart
             </button>
-          </form> 
+          </form>  {% endcomment %}
           <div class="d-flex" style="width:100%;">
             <div style="width:50%;">
               <a href="addtocart?pid={{product.id}}" class="btn text-light " style="width:100%; background:#1C3879;">Add To Cart</a>

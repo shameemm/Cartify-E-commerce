@@ -19,14 +19,17 @@
                         
                         <input type="hidden" name="address" value="{{addresses.id}}" id ="address">
                         
-                        <input type="radio" name="payment" value="Cash On Deivery" class="m-3" checked> Cash on delivery <br>
+                        <input type="radio" name="payment"  value="Cash On Deivery" class="m-3" checked> Cash on delivery <br>
                         <input type="radio" name="payment" value="Card" class="m-3"> Card<br>
                         <input type="radio" name="payment" value="Net Banking" class="m-3"> Netbanking<br>
                         <input type="radio" name="payment" value="UPI" class="m-3"> UPI<br>
-                        <button type="button" class="btn btn-primary payWithRazorpay" data-toggle="modal" data-target="#exampleModal">
+                        <button type="button" class="btn btn-primary payWithRazorpay w-50"  data-toggle="modal" data-target="#exampleModal">
                             Pay With Razorpay
                           </button>
-                        <button type="submit " class="btn text-light " style="width: 50%; float:right; background:#1C3879;">Place Order</button>
+                          <div id="paypal-button-container" class="mt-2 w-50" style="">
+
+                          </div>
+                        <button type="submit " class="btn text-light " style="width: 50%; background:#1C3879;">Place Order</button>
                     </div>
                 </div>
             </div>
@@ -66,5 +69,34 @@
 
 {% block scripts %}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AUTKXFpKM267rqgrZueGx5ytYoyAExpV4Wd-QnJNlerMJ_ndj1R692BGcM7MsqwYfB1Mefiw02blkvLw&currency=USD"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    paypal.Buttons({
+      // Sets up the transaction when a payment button is clicked
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: '0.01'//'{{total}}' // Can also reference a variable or function
+            }
+          }]
+        });
+      },
+      // Finalize the transaction after payer approval
+      onApprove: (data, actions) => {
+        return actions.order.capture().then(function(orderData) {
+            console.log(orderData);
+          // Successful capture! For dev/demo purposes:
+          //console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+          //const transaction = orderData.purchase_units[0].payments.captures[0];
+          //alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+          // When ready to go live, remove the alert and show a success message within this page. For example:
+          // const element = document.getElementById('paypal-button-container');
+          // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+          // Or go to another URL:  actions.redirect('thank_you.html');
+        });
+      }
+    }).render('#paypal-button-container');
+  </script>
 {% endblock scripts %}

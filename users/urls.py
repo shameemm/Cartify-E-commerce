@@ -24,6 +24,7 @@ urlpatterns = [
     path('buynow',views.buynow,name='buynow'),
     path('profile',views.profile,name='profile'),
     path('deleteaddress',views.deleteaddress,name='deleteaddress'),
+    path('razorpay',views.razorpay,name='razorpay'),
 ]
 
 if settings.DEBUG:

@@ -123,6 +123,17 @@ def view_product(request):
     print(images)
     return render(request, 'user/view_product.html', {'product': product, 'images':images})
 
+def razorpay(request):
+    cart = Cart.objects.filter(user=request.user)
+    subtotal = 0
+    for i in range(len(cart)):
+        x = cart[i].product.price*cart[i].quantity
+        subtotal = subtotal+x
+    shipping = 0
+    total = subtotal+shipping
+    return JsonResponse({
+                         'total': total,})
+            
 def minus(request):
     id = request.GET['id']
     cart = Cart.objects.get(id=id)
@@ -256,7 +267,8 @@ def payment(request):
         method = request.POST['payment']
         amount = request.POST['amount']
         cart = Cart.objects.filter(user=user)
-        
+        razorpay_payment_id = request.POST['razorpay_payment_id']
+        print(razorpay_payment_id)
         address = request.POST['address']
         print("address",address)
         address = Address.objects.get(id=address)
@@ -289,6 +301,12 @@ def payment(request):
         success = True
         product = Product.objects.all()
         categories = Category.objects.all()
+        print("==",categories)
+        payMode=request.POST['payment']
+        if payMode=='Razorpay':
+            print(payMode)
+            return JsonResponse({'status' : "Your Order has been placed successfully"})
+        
         return render(request, 'user/home.html', {'user': user, 'products': product, 'categories': categories, 'success': success})
     else:
         user = request.user
@@ -332,8 +350,8 @@ def deleteaddress(request):
 @login_required(login_url='login')
 def addtocart(request):
     pid = request.GET['pid']
-    quantity = request.POST['quantity']
-    print(quantity)
+    # quantity = request.POST['quantity']
+    # print(quantity)
     product = Product.objects.get(id=pid)
     
     uid = request.user
@@ -341,7 +359,7 @@ def addtocart(request):
     print("uid =", uid)
     if Cart.objects.filter(product=pid, user=uid).exists():
         cart = Cart.objects.get(product=pid, user=uid)
-        cart.quantity = quantity
+        cart.quantity = cart.quantity+1
         cart.save()
         return redirect('cart')
     else:
