@@ -109,6 +109,7 @@ def signup(request):
 
 def removecart(request):
     id=request.GET['id']
+    print(id)
     cart = Cart.objects.get(id=id)
     cart.delete()
     return redirect('cart')
@@ -267,8 +268,8 @@ def payment(request):
         method = request.POST['payment']
         amount = request.POST['amount']
         cart = Cart.objects.filter(user=user)
-        razorpay_payment_id = request.POST['razorpay_payment_id']
-        print(razorpay_payment_id)
+        # razorpay_payment_id = request.POST['razorpay_payment_id']
+        # print(razorpay_payment_id)
         address = request.POST['address']
         print("address",address)
         address = Address.objects.get(id=address)
@@ -363,7 +364,7 @@ def addtocart(request):
         cart.save()
         return redirect('cart')
     else:
-        cart = Cart.objects.create(product=product, user=uid, quantity=quantity)
+        cart = Cart.objects.create(product=product, user=uid)
         cart = Cart.objects.filter(user=uid)
         return redirect('cart')
 
@@ -372,8 +373,8 @@ def cancelorder(request):
     user = request.user
     id = request.GET['id']
     Order.objects.filter(id=id).update(status='Cancelled', cancel=True)
-
-    return redirect('myorder')
+    return JsonResponse({'status': True})
+    # return redirect('myorder')
 
 
 def logout(request):

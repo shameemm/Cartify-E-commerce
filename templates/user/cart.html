@@ -30,10 +30,13 @@
                                         <p>Quantity </p> 
                                         <div class="d-flex input-group text-center ">
                                             <div class=""><a href="minus?id={{cart.id}}" class="border btn">-</a></div>
-                                            <div><p class="mx-1">{{cart.quantity}}</p></div>
+                                            <div><p class="mt-2 mx-2">{{cart.quantity}}</p></div>
                                             <div class=""style=""><a href="up?id={{cart.id}}" class="border btn">+</a></div>
-                                            <div class="ms-3"><a class="btn btn-danger" href="removecart?id={{cart.id}}" ><i style=""onclick="return confirm('Are you sure to remove {{cart.product.name}} from the cart?')">Remove</i>
-                                            </a></div>
+                                            <div class="ms-3">
+                                                <button class="btn btn-danger btn-sm remove mt-1" onclick=removeCart({{cart.id}})  id="removecart" >Remove</button>
+                                                {% comment %} <a class="btn btn-danger" id="removecart" href="removecart?id={{cart.id}}" ><i style=""onclick="return confirm('Are you sure to remove {{cart.product.name}} from the cart?')">Remove</i> {% endcomment %}
+                                            </a> 
+                                        </div>
                                             
                                             <div class="ms-5"></div>
                                         </div>
@@ -88,4 +91,56 @@
     
 
 </div>
+<script>
+    function removeCart(id){
+        console.log(id)
+        var id = id
+        swal({
+            title: "Are you sure?",
+            text: "Once you delete, product will remove from cart?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                url: 'removecart',
+                method: 'GET',
+                data: {id:id},
+                success: function(data){
+                    swal("Poof! Your imaginary file has been deleted!", {
+                        icon: "success",
+                      });
+                    location.reload();
+                    
+               }
+             })
+            //swal("Poof! Your imaginary file has been deleted!", {
+                //icon: "success",
+            //});
+              
+            } else {
+              swal("Your imaginary file is safe!");
+            }
+          });
+        
+    }
+    //$('#removecart').click(()=>{
+    //    console.log("clicked")
+    //    var id = $(this).attr('id');
+    //    var prod_id = $(this).attr('prod_id');
+    //    var quantity = $(this).attr('quantity');
+    //    var action = 'removecart';
+    //    $.ajax({
+    //        url: 'removecart',
+    //        method: 'POST',
+    //        data: {id:id, prod_id:prod_id, quantity:quantity, action:action},
+    //        success: function(data){
+    //            alert(data);
+    //       }
+    //     })
+    //})
+    
+</script>
 {%endblock%}

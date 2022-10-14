@@ -61,7 +61,8 @@ def delete_category(request):
 
 @login_required(login_url='adminlogin')    
 def adminhome(request):
-    return render(request, 'admins/admin_home.html')
+    orders=Order.objects.all()
+    return render(request, 'admins/admin_home.html',{'orders':orders})
 
 
 @login_required(login_url='adminlogin')

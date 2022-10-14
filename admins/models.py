@@ -6,6 +6,10 @@ class Category(models.Model):
     description = models.TextField()
     is_active = models.BooleanField(default=True)
     
+
+# class Sales(models.Model):
+# 	date = models.DateField()
+    
 class Product(models.Model):
 	name = models.CharField(max_length=200)
 	brand = models.CharField(max_length=200)

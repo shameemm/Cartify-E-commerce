@@ -49,9 +49,11 @@
                         {% if order.cancel %}<p>Order Cancelled</p>
                         {% comment %} <p>Order Cancelled</p> {% endcomment %}
                         {% else %}
-                        <a class="btn text-light" href= "cancelorder?id={{order.id}}" style="background: #1C3879; "><i style=""onclick="return confirm('Are you sure to cancel the order ?')">Cancel Order</i>
-                            </a>
+                        <button class="btn btn-danger" onclick="cancelOrder({{order.id}})">Cancel Order</button>
                         {% endif %}
+                        {% comment %} <a class="btn text-light" href= "cancelorder?id={{order.id}}" style="background: #1C3879; "><i style=""onclick="return confirm('Are you sure to cancel the order ?')">Cancel Order</i>
+                            </a> {% endcomment %}
+                        
 
                     </div>
                     
@@ -68,4 +70,33 @@
     
 
 </div>
+<script>
+    function cancelOrder(id){
+        swal({
+            title: "Are you sure to cancel the order?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: '/cancelorder',
+                    type: 'GET',
+                    data: {id: id},
+                    success: function(response){
+                        location.reload()
+                        
+                    }
+                })
+              swal("Your order is Cancelled!", {
+                icon: "success",
+              });
+            } else {
+              swal("Your order is safe!");
+            }
+          });
+    }
+</script>
 {%endblock%}
