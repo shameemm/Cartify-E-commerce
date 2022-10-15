@@ -29,9 +29,15 @@
                                         <p>Price: ₹{{cart.product.price}}/-</p>
                                         <p>Quantity </p> 
                                         <div class="d-flex input-group text-center ">
-                                            <div class=""><a href="minus?id={{cart.id}}" class="border btn">-</a></div>
-                                            <div><p class="mt-2 mx-2">{{cart.quantity}}</p></div>
-                                            <div class=""style=""><a href="up?id={{cart.id}}" class="border btn">+</a></div>
+                                            <div class="">
+                                                {% comment %} <a href="minus?id={{cart.id}}" class="border btn">-</a> {% endcomment %}
+                                                <button class="border btn minus" onclick=down({{cart.id}})>-</button>
+                                            </div>
+                                            <div><span id="cartQuantity" class="mt-2 mx-2">{{cart.quantity}}</span></div>
+                                            <div class=""style="">
+                                                {% comment %} <a href="up?id={{cart.id}}" class="border btn">+</a> {% endcomment %}
+                                                <button class="border btn up" onclick=up({{cart.id}})>+</button>
+                                            </div>
                                             <div class="ms-3">
                                                 <button class="btn btn-danger btn-sm remove mt-1" onclick=removeCart({{cart.id}})  id="removecart" >Remove</button>
                                                 {% comment %} <a class="btn btn-danger" id="removecart" href="removecart?id={{cart.id}}" ><i style=""onclick="return confirm('Are you sure to remove {{cart.product.name}} from the cart?')">Remove</i> {% endcomment %}
@@ -74,9 +80,9 @@
                             </tr>
                         </table>
                         {% if total %}
-                        {% for cart in cart %}
-                        <a href="checkout?id={{cart.id}}" class="btn btn-primary" style="width:100%; background:#1C3879;">Checkout</a>
-                        {% endfor %}
+                        
+                        <a href="checkout" class="btn btn-primary" style="width:100%; background:#1C3879;">Checkout</a>
+                        
                         {% endif %}
                         <a class="btn text-light mt-3" href="/" style="width:100%; background:#1C3879;">Continue Shopping</a>
                     </div>
@@ -92,6 +98,24 @@
 
 </div>
 <script>
+    function up(id){
+        $.ajax({
+            type: "GET",
+            url: "up?id="+id,
+            success: function(data){
+                location.reload();
+            }
+        });
+    }
+    function down(id){
+        $.ajax({
+            type: "GET",
+            url: "minus?id="+id,
+            success: function(data){
+                location.reload();
+            }
+        });
+    }
     function removeCart(id){
         console.log(id)
         var id = id

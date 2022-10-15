@@ -1,54 +1,136 @@
 {% extends 'admins/admin_base.html' %}{% block content %}
-<div class="container mt-4">
-    <div class="row bg-light rounded col d-flex p-3 col-md-12 " style="height:200;">
+<div class="container d-flex">
+    <div class="col-md-6 h-50 bg-light rounded mt-4 p-4 " style="width:50%; height:200px;">
+        <h5 class="mt-3 fw-bold ms-3">Product - Quantity Report</h5>
+        <hr>
+                <canvas class="mt-3" id="myChart1" width="400" height="200"></canvas>
+                <script>
+                    var ctx = document.getElementById('myChart1').getContext('2d');
+                    var myChart1 = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: [{% for product in products %} '{{product.name}}', {% endfor %}],
+                        datasets: [{
+                        label: 'Number of Products',
+                        data: [{% for product in products %} {{ product.quantity }}, {% endfor %}],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                                borderWidth: 1
+                    }]
+                        },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                    });
+                </script>
+            
+    </div>
+    <div class="col-md-6 bg-light rounded m-4 " style="width:50%; height:;">
+        <h5 class="mt-3 fw-bold">User - Sales Report</h5>
+        <hr>
         
-        <canvas id="myChart" width="400" height="200"></canvas>   
+                <canvas id="myChart" width="400" height="200"></canvas>
+                <script>
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [{% for order in orders %} '{{order.user.username}}',{% endfor %}],
+                    datasets: [{
+                        label: '',
+                        data: [{% for order in orders %} {{ order.amount }}, {% endfor %}],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                                borderWidth: 1
+                    }]
+                        },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
+                    }
+                    });
+                </script>
+            
     </div>
 </div>
-<div class="container mt-3">
-    
-    <div class="row d-flex rounded bg-light col-md-6 " style="height:200;">
-        
-        <canvas id="myChart1" width="400" height="200"></canvas>   
+<div class="mx-5 my-3">
+    <div class="bg-light w-100 h-100">
+        <div class="card-header d-flex">
+            <div style="width:85%">
+            <h4>Products</h4>
+            </div>
+            
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Brand</th>
+                        <th>Name</th>
+                        <th>Image</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Description</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{product.brand}}</td>
+                        <td>{{product.name}}</td>
+                        <td><img src=".{{product.image.url}}" class = "img-fluid" style="width:100px; height:100px;"></td>
+                        <td>{{product.price}}</td>
+                        <td>{{product.category.name}}</td>
+                        <td>{{product.quantity}}</td>
+                        <td>{{product.description}}</td>
+                        
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-
-<script>
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [{% for order in orders %}'{{order.user.username}}',{% endfor %}],
-            datasets: [{
-                label: 'Sales per user',
-                data: [{% for order in orders %}{{order.amount}},{% endfor %}],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    
-    </script>
+</div>
 {% endblock content %}
