@@ -214,40 +214,39 @@ def cart(request):
     else:
         return redirect('login')
 
-
+@login_required(login_url='login')
+def addaddress(request):
+    if request.method == 'POST':
+        user = request.user
+        name = request.POST['name']
+        phone = request.POST['phone']
+        address = request.POST['address']
+        city = request.POST['city']
+        state = request.POST['state']
+        pincode = request.POST['pincode']
+        address = Address.objects.create(
+            name=name, phone=phone, address=address, city=city, state=state, pincode=pincode, user=user)
+        address.save()
+        return redirect('payment')
+    else:
+        return render(request, 'user/addaddress.html')
 @login_required(login_url='login')
 def checkout(request):
-    
-    if request.method == 'POST' :
-        if 'address_id' in request.POST:
-            
-            address_id = request.POST['address_id']
-            address = Address.objects.get(id=address_id)
-            cart = Cart.objects.filter(user=request.user)
-            subtotal = 0
-            for i in range(len(cart)):
-                x = cart[i].product.price*cart[i].quantity
-                subtotal = subtotal+x
-            shipping = 0
-            total = subtotal+shipping
-            return render(request, 'user/payment.html', {'subtotal': subtotal, 'total': total, 'addresses': address})
-        else:
-            user = request.user
-            name = request.POST['name']
-            phone = request.POST['phone']
-            address = request.POST['address']
-            city = request.POST['city']
-            state = request.POST['state']
-            pincode = request.POST['pincode']
-            address = Address.objects.create(
-                name=name, phone=phone, address=address, city=city, state=state, pincode=pincode, user=user)
-            address.save()
-            return redirect('payment')
-    # elif request.method == 'POST' and 'address_id' in request.POST:
-    #     address_id = request.POST['address_id']
-    #     address = Address.objects.get(id=address_id)
-    #     return render(request, 'user/payment.html', {'address': address})
+    print('checkput')
+    if request.method == 'POST' and 'address_id' in request.POST :
+        
+        address_id = request.POST['address_id']
+        address = Address.objects.get(id=address_id)
+        cart = Cart.objects.filter(user=request.user)
+        subtotal = 0
+        for i in range(len(cart)):
+            x = cart[i].product.price*cart[i].quantity
+            subtotal = subtotal+x
+        shipping = 0
+        total = subtotal+shipping
+        return render(request, 'user/payment.html', {'subtotal': subtotal, 'total': total, 'addresses': address})
     else:
+        print('else===')
         user = request.user
         cart = Cart.objects.filter(user=user)
         addresses = Address.objects.filter(user=user)
@@ -259,6 +258,7 @@ def checkout(request):
             subtotal = subtotal+x
         shipping = 0
         total = subtotal+shipping
+        # return HttpResponse('else')
         return render(request, 'user/checkout.html', {'subtotal': subtotal, 'total': total, 'addresses': addresses})
 
 

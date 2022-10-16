@@ -25,6 +25,7 @@ urlpatterns = [
     path('profile',views.profile,name='profile'),
     path('deleteaddress',views.deleteaddress,name='deleteaddress'),
     path('razorpay',views.razorpay,name='razorpay'),
+    path('addaddress',views.addaddress,name='addaddress'),
 ]
 
 if settings.DEBUG:
