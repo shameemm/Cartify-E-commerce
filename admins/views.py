@@ -119,9 +119,10 @@ def products(request):
     return render(request, 'admins/product_management.html',{'products':product})
 @login_required(login_url='adminlogin')
 def order(request):
-    order = Order.objects.all()
+    order = Order.objects.all().order_by('-id')
     cart = Cart.objects.all()
-    return render(request, 'admins/ordermanagement.html',{'orders':order,'carts':cart})
+    status = ['Ordered','Shipped','Delivered','Cancelled']
+    return render(request, 'admins/ordermanagement.html',{'orders':order,'carts':cart,'status':status})
 
 @login_required(login_url='adminlogin')
 def delete_product(request):
@@ -179,6 +180,7 @@ def block(request):
 def updatestatus(request):
     id=request.GET['id']
     status=request.POST['status']
+    
     print(id,status)
     Order.objects.filter(id=id).update(status=status)
     return redirect('order')

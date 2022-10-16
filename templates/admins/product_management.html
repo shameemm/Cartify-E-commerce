@@ -43,9 +43,11 @@
                             <td>{{product.description}}</td>
                             <td><a class="btn btn-primary" href="editproduct?id={{product.id}}">Edit</a></td>
                             <td>
+                                <botton class="btn btn-danger" onclick="deleteProduct({{product.id}})">Delete</botton>
                                 {% comment %} <a class="btn btn-danger" href="deleteproduct?id={{product.id}}">Delete</a> {% endcomment %}
-                                <a class="btn btn-danger" href= "deleteproduct?id={{product.id}}"><i style=""onclick="return confirm('Are you sure to block '+' {{product.name}} ?')"</i>
-                                Delete</a></td>
+                                {% comment %} <a class="btn btn-danger" href= "deleteproduct?id={{product.id}}"><i style=""onclick="return confirm('Are you sure to block '+' {{product.name}} ?')"</i>
+                                Delete</a> {% endcomment %}
+                            </td>
                             
                         </tr>
                         {% endfor %}
@@ -55,4 +57,36 @@
         </div>
     </div>
 </div>
+<script>
+    function deleteProduct(id){
+        {% comment %} alert(id); {% endcomment %}
+        var id=id;
+        
+        swal({
+            title: "Are you sure to delete the product?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: 'deleteproduct',
+                    type: 'GET',
+                    data: {id:id},
+                    success: function(response){
+                        swal("Poof! Product has been deleted!", {
+                            icon: "success",
+                        });
+                        location.reload();
+                    }
+                });
+              
+            } else {
+              swal("Your product is safe!");
+            }
+          });
+    }
+</script>
 {% endblock content %}
