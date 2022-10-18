@@ -54,7 +54,7 @@
                         {% comment %} <a class="btn text-light" href= "cancelorder?id={{order.id}}" style="background: #1C3879; "><i style=""onclick="return confirm('Are you sure to cancel the order ?')">Cancel Order</i>
                             </a> {% endcomment %}
                         
-                        <button class="btn btn-outline-primary btn-sm" onclick="">Download Invoice</button>
+                        <a class="btn btn-outline-primary btn-sm" href="invoice?id={{order.id}}" onclick="">Download Invoice</a>
                     </div>
                     
                 </div>

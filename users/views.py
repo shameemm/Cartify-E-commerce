@@ -6,10 +6,17 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from accounts.models import Accounts
 from admins.models import *
+import uuid
 from .models import *
 from django.db.models import Sum
 from .mixins import MessageHandler
 import random
+from django.http import FileResponse
+from fpdf import FPDF
+from copy import deepcopy
+import io
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
 # Create your views here.
 
 
@@ -38,6 +45,10 @@ def buynow(request):
     cart=Cart.objects.create(user=request.user,product_id=id,quantity=1)
     return render(request,'user/checkout.html',{'price':price,'addresses':addresses})
 def index(request):
+    
+    print(uuid.uuid4())
+    request.session['cart'] =str(random.randint(100000, 999999))
+    
     product = Product.objects.all()
     categories = Category.objects.all()
     
@@ -49,6 +60,68 @@ def index(request):
     else:
         return render(request, 'user/home.html', {'products': product, 'categories': categories})
 
+# def invoice(request):
+#     id=request.GET['id']
+    
+#     print(id)
+#     cart = OldCart.objects.filter(order=id)
+    
+#     order = Order.objects.get(id=id)
+#     print(order.address.name)
+#     print(cart)
+#     sales = []
+#     for i in range(len(cart)):
+#             a={"item": cart[i].product.name, "quantity":str(cart[i].quantity), "amount": str(cart[i].product.price*cart[i].quantity)}
+#             sales.append(deepcopy(a))
+   
+#     print(sales)
+    
+#     pdf = FPDF('P', 'mm', 'A4')
+#     pdf.add_page()
+#     pdf.set_font('courier', 'B', 16)
+#     pdf.cell(40, 10, 'This is what you have sold this month so far:',0,1)
+#     pdf.cell(40, 10, '',0,1)
+#     pdf.cell(40, 10,'Address' ,0,1)
+#     pdf.cell(40, 10, order.address.name,0,1)
+#     pdf.cell(40, 10, order.address.address,0,1)
+#     pdf.cell(40, 10, order.address.city,0,1)
+#     pdf.cell(40, 10, order.address.state,0,1)
+#     pdf.cell(40, 10, str(order.address.pincode),0,1)
+    
+    
+#     pdf.set_font('courier', '', 12)
+#     pdf.cell(200, 8, f"{'Item'.ljust(30)} {'Qantity'.ljust(20)} {'Amount'.rjust(20)}", 0, 1)
+#     pdf.line(10, 30, 150, 30)
+#     pdf.line(10, 38, 150, 38)
+    
+#     for line in sales:
+#         pdf.cell(200, 8, f"{line['item'].ljust(30)} {line['quantity'].ljust(20)} {line['amount'].rjust(20)}", 0, 1)
+     
+#     pdf.cell(40, 10, '',0,1)
+#     pdf.cell(40, 10, '',0,1)   
+#     pdf.line(10, 38, 150, 38)
+#     pdf.cell(100, 10, 'Total Amount : '+str(order.amount),1, 1, 'C')
+#     pdf.output('report.pdf', 'F')
+#     return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+def invoice(request):
+    # Create a file-like buffer to receive PDF data.
+    buffer = io.BytesIO()
+
+    # Create the PDF object, using the buffer as its "file."
+    p = canvas.Canvas(buffer)
+
+    # Draw things on the PDF. Here's where the PDF generation happens.
+    # See the ReportLab documentation for the full list of functionality.
+    p.drawString(100, 100, "Hello world.")
+
+    # Close the PDF object cleanly, and we're done.
+    p.showPage()
+    p.save()
+
+    # FileResponse sets the Content-Disposition header so that browsers
+    # present the option to save the file.
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
 
 def otpgenerate():
     otp = random.randint(100000, 999999)
@@ -115,6 +188,7 @@ def removecart(request):
     return redirect('cart')
 
 def view_product(request):
+    print(request.session['cart'])
     id = request.GET['id']
     product = Product.objects.get(id=id)
     print(product)
