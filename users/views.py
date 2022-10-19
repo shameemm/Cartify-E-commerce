@@ -17,6 +17,15 @@ from copy import deepcopy
 import io
 from django.http import FileResponse
 from reportlab.pdfgen import canvas
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django import template
+register = template.Library()
+
+@register.simple_tag()
+def multiply(qty, unit_price, *args, **kwargs):
+    # you would need to do any localization of the result here
+    return qty * unit_price
 # Create your views here.
 
 
@@ -60,68 +69,35 @@ def index(request):
     else:
         return render(request, 'user/home.html', {'products': product, 'categories': categories})
 
-# def invoice(request):
-#     id=request.GET['id']
+def invoice( request):
+    id = request.GET['id']
+    order = Order.objects.filter(id=id)
+    user = request.user
+    address=order[0].address
+    cart = OldCart.objects.filter(order_id=id)
+    print(address)
+    print(cart)
     
-#     print(id)
-#     cart = OldCart.objects.filter(order=id)
-    
-#     order = Order.objects.get(id=id)
-#     print(order.address.name)
-#     print(cart)
-#     sales = []
-#     for i in range(len(cart)):
-#             a={"item": cart[i].product.name, "quantity":str(cart[i].quantity), "amount": str(cart[i].product.price*cart[i].quantity)}
-#             sales.append(deepcopy(a))
-   
-#     print(sales)
-    
-#     pdf = FPDF('P', 'mm', 'A4')
-#     pdf.add_page()
-#     pdf.set_font('courier', 'B', 16)
-#     pdf.cell(40, 10, 'This is what you have sold this month so far:',0,1)
-#     pdf.cell(40, 10, '',0,1)
-#     pdf.cell(40, 10,'Address' ,0,1)
-#     pdf.cell(40, 10, order.address.name,0,1)
-#     pdf.cell(40, 10, order.address.address,0,1)
-#     pdf.cell(40, 10, order.address.city,0,1)
-#     pdf.cell(40, 10, order.address.state,0,1)
-#     pdf.cell(40, 10, str(order.address.pincode),0,1)
-    
-    
-#     pdf.set_font('courier', '', 12)
-#     pdf.cell(200, 8, f"{'Item'.ljust(30)} {'Qantity'.ljust(20)} {'Amount'.rjust(20)}", 0, 1)
-#     pdf.line(10, 30, 150, 30)
-#     pdf.line(10, 38, 150, 38)
-    
-#     for line in sales:
-#         pdf.cell(200, 8, f"{line['item'].ljust(30)} {line['quantity'].ljust(20)} {line['amount'].rjust(20)}", 0, 1)
-     
-#     pdf.cell(40, 10, '',0,1)
-#     pdf.cell(40, 10, '',0,1)   
-#     pdf.line(10, 38, 150, 38)
-#     pdf.cell(100, 10, 'Total Amount : '+str(order.amount),1, 1, 'C')
-#     pdf.output('report.pdf', 'F')
-#     return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
-def invoice(request):
-    # Create a file-like buffer to receive PDF data.
-    buffer = io.BytesIO()
 
-    # Create the PDF object, using the buffer as its "file."
-    p = canvas.Canvas(buffer)
+    template_path = 'user/invoice.html'
 
-    # Draw things on the PDF. Here's where the PDF generation happens.
-    # See the ReportLab documentation for the full list of functionality.
-    p.drawString(100, 100, "Hello world.")
+    context = {'order': order, 'address':address, 'user': user, 'cart': cart}
 
-    # Close the PDF object cleanly, and we're done.
-    p.showPage()
-    p.save()
+    response = HttpResponse(content_type='application/pdf')
 
-    # FileResponse sets the Content-Disposition header so that browsers
-    # present the option to save the file.
-    buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='hello.pdf')
+    response['Content-Disposition'] = 'filename="invoice.pdf"'
+
+    template = get_template(template_path)
+
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    # if error then show some funy view
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
 
 def otpgenerate():
     otp = random.randint(100000, 999999)

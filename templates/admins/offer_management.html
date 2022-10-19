@@ -1,6 +1,5 @@
-{% extends 'admins/admin_base.html' %}{% block content %}
-
-    
+{% extends 'admins/admin_base.html' %}
+{% block content %}
 <div class="container">
     <div class="col-md-8 my-4" style="width:auto;">
         <div>
@@ -11,33 +10,30 @@
                 <h4>Products Management</h4>
                 </div>
                 <div >
-                <a class="btn btn-primary " href ="addproduct
-                ">Add Product</a>
+                <a class="btn btn-primary " href ="addoffer">Add Offer</a>
                 </div>
             </div>
             <div class="card-body">
                 <table id="table_id" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Brand</th>
                             <th>Name</th>
-                            <th>Image</th>
-                            <th>Price</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Product</th>
                             <th>Category</th>
-                            <th>Description</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for product in products %}
+                        {% for offer in offers %}
                         <tr>
-                            <td>{{product.brand}}</td>
-                            <td>{{product.name}}</td>
-                            <td><img src=".{{product.image.url}}" class = "img-fluid" style="width:100px; height:100px;"></td>
-                            <td>{{product.price}}</td>
-                            <td>{{product.category.name}}</td>
-                            <td>{{product.description}}</td>
+                            <td>{{offer.name}}</td>
+                            <td>{{offer.startdate}}</td>
+                            <td>{{offer.enddate}}</td>
+                            <td>{{offer.product_id}}</td>
+                            <td>{{offer.category_id}}</td>
                             <td><a class="btn btn-primary" href="editproduct?id={{product.id}}">Edit</a></td>
                             <td>
                                 <botton class="btn btn-danger" onclick="deleteProduct({{product.id}})">Delete</botton>

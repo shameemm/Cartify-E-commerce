@@ -107,8 +107,6 @@ def cancelorder(request):
     user=request.user
     id=request.GET['id']
     Order.objects.filter(id=id).update(status='Cancelled',cancel=True)
-    
-    
     return redirect('order')
 
 
@@ -177,6 +175,28 @@ def block(request):
     user.save()
     return redirect('users')
 
+def offers(request):
+    offer=Offers.objects.all()
+    return render(request, 'admins/offer_management.html',{'offers':offer}) 
+
+def addoffer(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        offer = request.POST['offer']
+        startdate = request.POST['startdate']
+        print(startdate)
+        enddate = request.POST['enddate']
+        print( "end",enddate)
+        category = request.POST['category']
+        product = request.POST['product']
+        print(product)
+        offer = Offers.objects.create(name=name,offer=offer,startdate=startdate,enddate=enddate,category_id=category,product_id=product)
+        offer.save()
+        return redirect('offers')
+    else:
+        products=Product.objects.all()
+        categories=Category.objects.all()
+        return render(request, "admins/add_offer.html",{'products':products,'categories':categories})
 def updatestatus(request):
     id=request.GET['id']
     status=request.POST['status']

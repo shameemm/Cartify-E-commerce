@@ -1,0 +1,77 @@
+<head>
+    <style>
+        @page {
+            size: a4 portrait;
+            @frame header_frame {           /* Static Frame */
+                -pdf-frame-content: header_content;
+                left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+            }
+            @frame content_frame {          /* Content Frame */
+                left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+            }
+            @frame footer_frame {           /* Another static Frame */
+                -pdf-frame-content: footer_content;
+                left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+            }
+        }
+    </style>
+    </head>
+    
+    <body style="font:13px">
+        <!-- Content for Static Frame 'header_frame' -->
+        {% for order in order %}
+        <div id="header_content">
+            <h3 style = "font: 30px Arial, sans-serif;">Invoice - {{order.id}} </h3>
+        </div>
+        {% endfor %}
+    <hr>
+        <!-- Content for Static Frame 'footer_frame' -->
+        <div id="footer_content">(c) - page <pdf:pagenumber>
+            of <pdf:pagecount>
+        </div>
+    
+        <!-- HTML Content -->
+        <table>
+                <tr>
+                    <td>{{address.name}}</td>
+                </tr>
+                <tr>
+                    <td>{{address.city}} {{ address.state}},</td>
+                    <td>{{user.email}}</td>
+                </tr>
+                <tr>
+                    <td>{{address.pincode}}</td>
+                    <td>{{address.phone}}</td>
+                </tr>
+        </table>
+    
+        <hr>
+    
+        <table>
+            <tr>
+     
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+            {% for cart in cart %}
+            <tr style="padding-bottom:10px;">
+
+     
+                <td >{{cart.product.name}}</td>
+                <td style="padding-left:33px;"> {{cart.product.price}}/-</td>
+                
+                <td style="padding-left:33px;">{{cart.quantity}}</td>
+                <td style="padding-left:33px;"> {% widthratio cart.product.price 1 cart.quantity %}/-</td>
+            </tr>
+            {% endfor %}
+        </table>
+    
+        <hr>
+    {% for order in order %}
+        <p><strong>Total: {{order.amount}}/-</strong></p>
+        {% endfor %}
+        <hr>
+    </body>
+    </html>

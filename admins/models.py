@@ -1,46 +1,64 @@
 from django.db import models
 from cropperjs.models import CropperImageField
 # Create your models here.
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     is_active = models.BooleanField(default=True)
-    
+
 
 # class Sales(models.Model):
 # 	date = models.DateField()
-    
+
 class Product(models.Model):
-	name = models.CharField(max_length=200)
-	brand = models.CharField(max_length=200)
-	price = models.FloatField()
-	description = models.TextField(null=True, blank=True)
-	image = models.ImageField(null=True, blank=True,upload_to='assets/images')
-	category = models.ForeignKey(Category, on_delete=models.CASCADE)
-	quantity = models.IntegerField(default=1)
+    name = models.CharField(max_length=200)
+    brand = models.CharField(max_length=200)
+    price = models.FloatField()
+    description = models.TextField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to='assets/images')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
 
 
-	def __str__(self):
-		return self.name
-
-	@property
-	def imageURL(self):
-		try:
-			url = self.image.url
-		except:
-			url = ''
-		return url
 class Images(models.Model):
-	image = models.ImageField(null=True, blank=True,upload_to='assets/images')
-	product = models.ForeignKey(Product, on_delete=models.CASCADE)
-	def __str__(self):
-		return self.image.url
+    image = models.ImageField(null=True, blank=True, upload_to='assets/images')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
-	@property
-	def imageURL(self):
-		try:
-			url = self.image.url
-		except:
-			url = ''
-		return url
-	
+    def __str__(self):
+        return self.image.url
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.image.url
+        except:
+            url = ''
+        return url
+
+
+class Offers(models.Model):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, null=True, blank=True)
+
+    name = models.CharField(max_length=200)
+    offer = models.IntegerField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.product.name
