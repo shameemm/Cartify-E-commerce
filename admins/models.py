@@ -62,3 +62,13 @@ class Offers(models.Model):
 
     def __str__(self):
         return self.product.name
+    
+class Coupon(models.Model):
+    code = models.CharField(max_length=50)
+    discount = models.IntegerField()
+    start_date = models.DateField()
+    end_date = models.DateField()
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.code

@@ -10,30 +10,36 @@
                 <h4>Products Management</h4>
                 </div>
                 <div >
-                <a class="btn btn-primary " href ="addoffer">Add Offer</a>
+                <a class="btn btn-primary " href ="addcoupon">Add Coupon</a>
                 </div>
             </div>
             <div class="card-body">
                 <table id="table_id" class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Discount</th>
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th>Product</th>
-                            <th>Category</th>
+                            <th>Block</th>
                             <th>Edit</th>
                             <th>Delete</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for offer in offers %}
+                        {% for coupon in coupons %}
                         <tr>
-                            <td>{{offer.name}}</td>
-                            <td>{{offer.start_date}}</td>
-                            <td>{{offer.end_date}}</td>
-                            <td>{{offer.product.name}}</td>
-                            <td>{{offer.category_id}}</td>
+                            <td>{{coupon.code}}</td>
+                            <td>{{coupon.discount}}</td>
+                            <td>{{coupon.start_date}}</td>
+                            <td>{{coupon.end_date}}</td>
+                            <td> {% if user.is_active %}
+                                <a style=" background:#CCEDD2; " class="btn" href= "block?id={{user.id}}"><i style=""onclick="return confirm('Are you sure to block '+' {{user.username}} ?')">Block</i>
+                                    </a>
+                                {% else %}
+                                <a style="background:#CCEDD2;" class="btn" href= "unblock?id={{user.id}}"><i style="y"onclick="return confirm('Are you sure to unblock '+' {{user.username}} ?')"</i>
+                                unblock</a>
+                                {% endif %}</td>
                             <td><a class="btn btn-primary" href="editproduct?id={{product.id}}"><i class="fa-solid fa-pen-to-square text-light"></i></a></td>
                             <td>
                                 <botton class="btn btn-danger" onclick="deleteProduct({{product.id}})"><i class="fa-solid fa-trash text-light"></i></botton>

@@ -35,11 +35,12 @@
                         {% endfor %}
                         <div class="d-flex">
                         
-                        <button class="btn my-2 text-light" type="submit" style="width:50%; background:#1C3879;">Select Address</button> 
-                        
+                            <button class="btn my-2 text-light button" type="submit" style="width:50%; background:#1C3879;">Select Address</button> 
+
                         </div>
 
                     </form>
+
                     <hr>
                     <h5>Add New Address</h5>
                     <hr>
@@ -75,7 +76,18 @@
                                 <td>₹{{price}}/-</td>
                                 {% endif %}
                             </tr>
+                            
                         </table>
+                        {% comment %} <hr>
+                        Select a payment methods
+                        <hr>
+                        <button type="submit " class="btn text-light m-1" style="width: 100%; background:#1C3879;">Cash On Delivery</button>
+                        <button type="button" class="btn btn-primary payWithRazorpay w-100 m-1"  data-toggle="modal" data-target="#exampleModal">
+                          Pay With Razorpay
+                        </button><br>
+                        <div id="paypal-button-container" class="mt-2 w-50 m-1" style=""> {% endcomment %}
+
+                        </div><br>
                        
                     </div>
                 </div>
@@ -86,4 +98,20 @@
     
 
 </div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AUTKXFpKM267rqgrZueGx5ytYoyAExpV4Wd-QnJNlerMJ_ndj1R692BGcM7MsqwYfB1Mefiw02blkvLw&currency=USD"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% comment %} <script>
+    $(document).ready(function() {
+        $('button').click(function() {
+            var value = $("input[type=radio][name=address_id]:checked").val();
+            if (value) {
+                alert(value);
+            }
+            else {
+                alert('Nothing is selected');
+            }
+        })
+    });
+</script> {% endcomment %}
 {%endblock%}

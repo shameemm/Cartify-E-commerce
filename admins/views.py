@@ -6,6 +6,11 @@ import os
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User, auth
 from django.contrib.auth.decorators import login_required
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django import template
+import pandas as pd
+from django.http import FileResponse
 # Create your views here.
 def adminlogin(request):
     if request.user.is_authenticated and request.user.is_superuser:
@@ -174,11 +179,12 @@ def block(request):
     user.is_active=False
     user.save()
     return redirect('users')
-
+@login_required(login_url='adminlogin')
 def offers(request):
     offer=Offers.objects.all()
     return render(request, 'admins/offer_management.html',{'offers':offer}) 
 
+@login_required(login_url='adminlogin')
 def addoffer(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -190,13 +196,58 @@ def addoffer(request):
         category = request.POST['category']
         product = request.POST['product']
         print(product)
-        offer = Offers.objects.create(name=name,offer=offer,startdate=startdate,enddate=enddate,category_id=category,product_id=product)
+        offer = Offers.objects.create(name=name,offer=offer,start_date=startdate,end_date=enddate,category_id=category,product_id=product)
         offer.save()
         return redirect('offers')
     else:
         products=Product.objects.all()
         categories=Category.objects.all()
         return render(request, "admins/add_offer.html",{'products':products,'categories':categories})
+    
+@login_required(login_url='adminlogin')
+def report(request):
+    print(request.method)
+    type = request.POST['report_type']
+    order = Order.objects.all()
+    print(type)
+    if type == 'PDF':
+        
+        template_path = 'admins/report.html'
+
+        context = {'order': order}
+
+        response = HttpResponse(content_type='application/pdf')
+
+        response['Content-Disposition'] = 'filename="invoice.pdf"'
+
+        template = get_template(template_path)
+
+        html = template.render(context)
+
+        # create a pdf
+        pisa_status = pisa.CreatePDF(
+        html, dest=response)
+        # if error then show some funy view
+        if pisa_status.err:
+            return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        return response
+    else:
+        data =[]
+        for order in order:
+            data.append({
+                "id":order.id,
+                "Customer":order.user.username,
+                "Ordered date":str(order.ordered_date),
+                "Amount":order.amount,
+                "Payment Method":order.method,
+                "Order Status":order.status,
+            })
+        pd.DataFrame(data).to_excel("report.xlsx")
+        # response['Content-Disposition'] = 'filename="report.xlsx"'
+        return FileResponse(open('report.xlsx', 'rb'), as_attachment=True, filename="report.xlsx")
+        
+    
+@login_required(login_url='adminlogin')
 def updatestatus(request):
     id=request.GET['id']
     status=request.POST['status']
@@ -205,6 +256,21 @@ def updatestatus(request):
     Order.objects.filter(id=id).update(status=status)
     return redirect('order')
 
+@login_required(login_url='adminlogin')
+def coupons(request):
+    coupon=Coupon.objects.all()
+    return render(request, 'admins/coupon_management.html',{'coupons':coupon})
+
+def addcoupon(request):
+    if request.method == 'POST':
+        code = request.POST['code']
+        discount = request.POST['discount']
+        start_date = request.POST['startdate']
+        end_date = request.POST['enddate']
+        coupon = Coupon.objects.create(code=code,discount=discount,start_date=start_date,end_date=end_date)
+        return redirect('coupons')
+    else:
+        return render(request, "admins/add_coupon.html")
 @login_required(login_url='adminlogin')
 def unblock(request):
     id=request.GET['id']
