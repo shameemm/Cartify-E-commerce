@@ -11,7 +11,25 @@
                 </div>
                 
                 <div class="card-body">
-                    <h6>Select payment methods</h6>
+                  <h6 class="fw-bold">Add Coupon</h6>
+                    
+                    <form action="checkout" method="POST">
+                        {% csrf_token %}
+                        <div class=" d-flex">
+                          <div>
+                            <input type="hidden" name="amount" value="{{total}}" id="amount">
+                            <input type="hidden" name="cart" value="{{cart}}" id ="cart">
+                            <input type="hidden" name="payment" value="Cash on Delivery" id ="cart">
+                            <input type="hidden" name="address" value="{{addresses.id}}" id ="address">
+                            <input type="hidden" name="amount" value="{{total}}" id="amount">
+                            <input type="text" style="width:50%" name="code" id="code" placeholder="Enter the code" class="form-control w-100">
+                          </div>
+                          <div>
+                            <button type="submit" class="btn btn-primary mx-2 ">Apply</button></div>
+                        </div>
+                    </form>
+                    <hr>
+                    <h6 class="fw-bold">Select payment methods</h6>
                     <form action="payment" method = "POST">
                         {% csrf_token %}
                         <input type="hidden" name="amount" value="{{total}}" id="amount">

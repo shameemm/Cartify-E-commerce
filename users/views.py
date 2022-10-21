@@ -294,7 +294,29 @@ def checkout(request):
             subtotal = subtotal+x
         shipping = 0
         total = subtotal+shipping
-        return render(request, 'user/payment.html', {'subtotal': subtotal, 'total': total, 'addresses': address})
+        return render(request, 'user/payment.html', {'subtotal': subtotal, 'total': total, 'addresses': address,'cart':cart})
+    elif request.method == 'POST' and 'code' in request.POST:
+        user = request.user
+        method = request.POST['payment']
+        amount = request.POST['amount']
+        cart = Cart.objects.filter(user=user)
+        
+        address = request.POST['address']
+        total = float(request.POST['amount'])
+        code = request.POST['code']
+        print(code)
+        subtotal = 0
+        for i in range(len(cart)):
+            x = cart[i].product.price*cart[i].quantity
+            subtotal = subtotal+x
+        shipping = 0
+        offer = Offers.objects.get(code=code)
+        
+        amount = total-offer.offer
+        print(amount)
+        return render(request, 'user/payment.html', { 'subtotal':subtotal,'total': total, 'addresses': address,'cart':cart})
+        # return redirect('payment')
+        
     else:
         print('else===')
         user = request.user
@@ -323,7 +345,8 @@ def payment(request):
         address = request.POST['address']
         print("address",address)
         address = Address.objects.get(id=address)
-        prdct = Product.objects.all()
+        # prdct = cart.product
+        # print(prdct)
         # print(cart[0].quantity)
         
         
@@ -337,11 +360,12 @@ def payment(request):
         shipping = 0
         total = subtotal + shipping
         crt = Cart.objects.filter(user=user)
-       
+        
         print(method)
         order = Order.objects.create(
             user=user, address=address, amount=total, method=method)
         order.save()
+        
 
         for i in range(len(cart)):
             oldcart = OldCart.objects.create(
@@ -349,6 +373,14 @@ def payment(request):
             oldcart.save()
 
         cart.delete()
+        prdcts=OldCart.objects.filter(order=order)
+        for i in range(len(prdcts)):
+            p=Product.objects.filter(id=prdcts[i].product.id)
+            print("qty",p[i].quantity)
+            print("cartqty",prdcts[i].quantity)
+            print("pqty",p[i].quantity-prdcts[i].quantity)
+            print("pid",prdcts[i].product.id)
+            Product.objects.filter(id=prdcts[i].product.id).update(quantity=p[i].quantity-prdcts[i].quantity)
         success = True
         product = Product.objects.all()
         categories = Category.objects.all()
@@ -369,6 +401,15 @@ def payment(request):
         shipping = 0
         total = subtotal + shipping
         return render(request, 'user/payment.html', {'subtotal': subtotal, 'total': total, 'cart': cart})
+    
+# @login_required(login_url='login')
+# def applycoupon(request):
+#     code = request.POST['code']
+#     print(code)
+#     offer = Offers.objects.filter(code=code)
+#     print(offer[0].amount)
+#     amount = offer[0].amount
+#     return redirect('payment')
 
 
 @login_required(login_url='login')

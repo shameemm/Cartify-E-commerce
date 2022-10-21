@@ -181,13 +181,14 @@ def block(request):
     return redirect('users')
 @login_required(login_url='adminlogin')
 def offers(request):
-    offer=Offers.objects.all()
+    offer=Offers.objects.all().order_by('-id')
     return render(request, 'admins/offer_management.html',{'offers':offer}) 
 
 @login_required(login_url='adminlogin')
 def addoffer(request):
     if request.method == 'POST':
         name = request.POST['name']
+        code = request.POST['code']
         offer = request.POST['offer']
         startdate = request.POST['startdate']
         print(startdate)
@@ -196,7 +197,7 @@ def addoffer(request):
         category = request.POST['category']
         product = request.POST['product']
         print(product)
-        offer = Offers.objects.create(name=name,offer=offer,start_date=startdate,end_date=enddate,category_id=category,product_id=product)
+        offer = Offers.objects.create(name=name,code=code,offer=offer,start_date=startdate,end_date=enddate,category_id=category,product_id=product)
         offer.save()
         return redirect('offers')
     else:
@@ -247,6 +248,20 @@ def report(request):
         return FileResponse(open('report.xlsx', 'rb'), as_attachment=True, filename="report.xlsx")
         
     
+@login_required(login_url='adminlogin')
+def blockcoupon(request):
+    id=request.GET['id']
+    offer=Offers.objects.filter(id=id).update(is_active=False)
+    
+    return redirect('offers')
+
+@login_required(login_url='adminlogin')
+def unblockcoupon(request):
+    id=request.GET['id']
+    offer=Offers.objects.filter(id=id).update(is_active=True)
+    
+    return redirect('offers')
+
 @login_required(login_url='adminlogin')
 def updatestatus(request):
     id=request.GET['id']

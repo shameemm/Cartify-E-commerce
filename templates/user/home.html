@@ -76,7 +76,16 @@
           <p class="text-secondary">{{product.brand}}</p>
           <h5 class="card-title">{{product.name}}</h5>
           <p class="card-text me-2"> ₹{{product.price}}/-</p>
+          
+          {% if product.quantity == 0 %}
+            <p class="text-danger text-center">Out of stock<p>
+          {% elif product.quantity <= 3 %}
+              <p class="text-danger m-1">Only {{product.quantity}} left in stock<p>
+              <a href="view_product?id={{product.id}}" class="btn btn-primary" style="width:100%; background:#1C3879;">View</a>
+          
+          {% else %}
           <a href="view_product?id={{product.id}}" class="btn btn-primary" style="width:100%; background:#1C3879;">View</a>
+          {% endif %}
         </div>
       </div>
           

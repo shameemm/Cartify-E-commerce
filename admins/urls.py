@@ -29,6 +29,8 @@ urlpatterns = [
     path('coupons',views.coupons, name='coupons'),
     path('addcoupon',views.addcoupon, name='addcoupon'),
     path('report',views.report, name='report'),
+    path('blockcoupon',views.blockcoupon, name='blockcoupon'),
+    path('unblockcoupon',views.unblockcoupon, name='unblockcoupon'),
 ]
     
 if settings.DEBUG:

@@ -56,9 +56,11 @@ class Offers(models.Model):
     name = models.CharField(max_length=200)
     offer = models.IntegerField()
     start_date = models.DateField()
+    code = models.CharField(max_length=50, default='')
     end_date = models.DateField()
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.product.name

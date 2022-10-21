@@ -18,29 +18,32 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Coupon Code</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Product</th>
                             <th>Category</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
+                            <th>Block</th>
+                           
                         </tr>
                     </thead>
                     <tbody>
                         {% for offer in offers %}
                         <tr>
                             <td>{{offer.name}}</td>
+                            <td>{{offer.code}}</td>
                             <td>{{offer.start_date}}</td>
                             <td>{{offer.end_date}}</td>
                             <td>{{offer.product.name}}</td>
-                            <td>{{offer.category_id}}</td>
-                            <td><a class="btn btn-primary" href="editproduct?id={{product.id}}"><i class="fa-solid fa-pen-to-square text-light"></i></a></td>
+                            <td>{{offer.category.name}}</td>
+                            
                             <td>
-                                <botton class="btn btn-danger" onclick="deleteProduct({{product.id}})"><i class="fa-solid fa-trash text-light"></i></botton>
-                                {% comment %} <a class="btn btn-danger" href="deleteproduct?id={{product.id}}">Delete</a> {% endcomment %}
-                                {% comment %} <a class="btn btn-danger" href= "deleteproduct?id={{product.id}}"><i style=""onclick="return confirm('Are you sure to block '+' {{product.name}} ?')"</i>
-                                Delete</a> {% endcomment %}
-                            </td>
+                                {% if offer.is_active %}
+                                <a class="btn btn-primary" onclick="blockOffer({{offer.id}})" >Block</i></a>
+                                {% else %}
+                                <a class="btn btn-primary" onclick="UnblockOffer({{offer.id}})" >Unblock</i></a></td>
+                                {% endif %}
+                            
                             
                         </tr>
                         {% endfor %}
@@ -51,12 +54,11 @@
     </div>
 </div>
 <script>
-    function deleteProduct(id){
-        {% comment %} alert(id); {% endcomment %}
+    {% comment %} function deleteOffer(id){
         var id=id;
-        
+        alert(id)
         swal({
-            title: "Are you sure to delete the product?",
+            title: "Are you sure to delete the offer?",
             text: "",
             icon: "warning",
             buttons: true,
@@ -64,27 +66,77 @@
           })
           .then((willDelete) => {
             if (willDelete) {
+                alert('hiii')
+                    
                 $.ajax({
-                    url: 'deleteproduct',
+                    url: 'deletecoupon',
                     type: 'GET',
                     data: {id:id},
                     success: function(response){
-                        swal("Poof! Product has been deleted!", {
+                        swal("Poof! Offer has been deleted!", {
                             icon: "success",
                         });
                         location.reload();
                     }
+                    
                 });
               
             } else {
               swal("Your product is safe!");
             }
           });
+    } {% endcomment %}
+    function blockOffer(id){
+        var id=id;
+        swal({
+            title: "Are you sure to block the offer?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+                    
+                $.ajax({
+                    url: 'blockcoupon',
+                    type: 'GET',
+                    data: {id:id},
+                    success: function(response){
+                        swal("Poof! offer has been blocked!", {
+                            icon: "success",
+                        });
+                        location.reload();
+                    }
+                    
+                });
+              
+            } else {
+              swal("Your offer is safe!");
+            }
+          });
     }
+    function UnblockOffer(id){
+        var id=id;
+        
+        $.ajax({
+            url: 'unblockcoupon',
+            type: 'GET',
+            data: {id:id},
+            success: function(response){
+                
+                location.reload();
+            }
+            
+        });
+    }
+    
+        
     
         $(document).ready( function () {
           $('#table_id').DataTable();
         });
+
       
 </script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.11.3/af-2.3.7/b-2.0.1/b-colvis-2.0.1/b-html5-2.0.1/b-print-2.0.1/cr-1.5.4/date-1.1.1/fc-4.0.0/kt-2.6.4/r-2.2.9/rg-1.1.3/rr-1.2.8/sl-1.3.3/datatables.min.css"/>
