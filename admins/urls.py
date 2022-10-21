@@ -31,6 +31,8 @@ urlpatterns = [
     path('report',views.report, name='report'),
     path('blockcoupon',views.blockcoupon, name='blockcoupon'),
     path('unblockcoupon',views.unblockcoupon, name='unblockcoupon'),
+    path('acceptrequest',views.acceptrequest, name='acceptrequest'),
+    path('rejectrequest',views.rejectrequest, name='rejectrequest'),
 ]
     
 if settings.DEBUG:

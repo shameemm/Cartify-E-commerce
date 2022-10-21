@@ -299,9 +299,10 @@ def checkout(request):
         user = request.user
         method = request.POST['payment']
         amount = request.POST['amount']
+        address = request.POST['address']
         cart = Cart.objects.filter(user=user)
         
-        address = request.POST['address']
+        print("address",address)
         total = float(request.POST['amount'])
         code = request.POST['code']
         print(code)
@@ -311,10 +312,9 @@ def checkout(request):
             subtotal = subtotal+x
         shipping = 0
         offer = Offers.objects.get(code=code)
-        
-        amount = total-offer.offer
+        total = total-offer.offer
         print(amount)
-        return render(request, 'user/payment.html', { 'subtotal':subtotal,'total': total, 'addresses': address,'cart':cart})
+        return render(request, 'user/payment.html', { 'subtotal':subtotal,'total': total, 'addresses': address,'cart':cart, 'code':code, 'offer':offer.offer})
         # return redirect('payment')
         
     else:
@@ -339,19 +339,11 @@ def payment(request):
         user = request.user
         method = request.POST['payment']
         amount = request.POST['amount']
+        print(amount)
         cart = Cart.objects.filter(user=user)
-        # razorpay_payment_id = request.POST['razorpay_payment_id']
-        # print(razorpay_payment_id)
         address = request.POST['address']
         print("address",address)
         address = Address.objects.get(id=address)
-        # prdct = cart.product
-        # print(prdct)
-        # print(cart[0].quantity)
-        
-        
-        # crt = Cart.objects.get(user=user)
-        # print(cart)
         subtotal = 0
         for i in range(len(cart)):
             x = cart[i].product.price*cart[i].quantity
@@ -363,7 +355,7 @@ def payment(request):
         
         print(method)
         order = Order.objects.create(
-            user=user, address=address, amount=total, method=method)
+            user=user, address=address, amount=amount, method=method)
         order.save()
         
 
@@ -411,6 +403,20 @@ def payment(request):
 #     amount = offer[0].amount
 #     return redirect('payment')
 
+@login_required(login_url='login')
+def returnorder(request):
+    print(request.GET['id'])
+    id=int(request.GET['id'])-1
+    print(id)
+    order = Order.objects.get(id=id)
+    user = request.user
+    status = 'Return Requested'
+    reason = request.POST['reason']
+    order = Order.objects.filter(id=id).update(status=status, reason=reason)
+    
+    print(order)
+    request.save()
+    return redirect('myorder')
 
 @login_required(login_url='login')
 def myorder(request):

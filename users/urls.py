@@ -27,7 +27,9 @@ urlpatterns = [
     path('razorpay',views.razorpay,name='razorpay'),
     path('addaddress',views.addaddress,name='addaddress'),
     path('invoice',views.invoice,name='invoice'),
+    path('returnorder',views.returnorder,name='returnorder'),
     # path('applycoupon',views.applycoupon,name='applycoupon'),
+    
 ]
 
 if settings.DEBUG:

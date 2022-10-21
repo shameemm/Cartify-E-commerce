@@ -1,6 +1,48 @@
 {% extends 'admins/admin_base.html' %}
 {% block content %}
-<div class="m-5">
+<style>
+  
+  
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 100px; /* Location of the box */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    
+    /* Modal Content */
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 50%;
+    }
+    
+    /* The Close Button */
+    .close {
+      color: #aaaaaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    </style>
+<div class="m-2">
    
         
     <div class="col-md-8 my-4" style="width:auto;">
@@ -41,11 +83,69 @@
 
                             <td>{% if order.cancel %}
                                 Order Canceled
+                                {% elif order.status == 'Return Requested'%}
+                                <button type="button" id="myBtn" class="btn"> Review Request </button>
+                                <div id="myModal" class="modal">
+
+                                    <!-- Modal content -->
+                                    <div class="modal-content">
+                                      <span class="close">&times;</span>
+                                      <h3> Reason For Return </h3>
+                                        <p>{{order.reason}}</p>
+                                        <div class="row ">
+                                            <a href="acceptrequest?id={{order.id}}" class="my-1 btn btn-success">Accept</a>
+                                            <a href="rejectrequest?id={{order.id}}" class="my-1 btn btn-danger">Reject</a>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                {% elif order.status == 'Return Accepted' or order.status == 'Return Rejected'%}
+                                {% comment %} <form action="updatestatus?id={{order.id}}" method="POST">
+                                    {% csrf_token %}
+                                        <select name="status" class="" id="status">
+                                            <option value="0">Update status</option>
+                                            
+                                            {% for i in returnstatus %}
+                                            <option value="{{i}}">{{i}}</option>
+                                           
+                                            {% endfor %}
+                                            
+                                        </select>
+                                        <button type="submit" id ="btn1"class="btn btn-primary">Update</button>
+                                    </form> {% endcomment %}
+                                {% elif order.status == 'Shipped'%}
+                                <form action="updatestatus?id={{order.id}}" method="POST">
+                                {% csrf_token %}
+                                    <select name="status" class="" id="status">
+                                        <option value="0">Update Status</option>
+                                        
+                                        {% for i in status1 %}
+                                        <option value="{{i}}">{{i}}</option>
+                                       
+                                        {% endfor %}
+                                        
+                                    </select>
+                                    <button type="submit" id ="btn1"class="btn btn-primary">Update</button>
+                                </form>
+                                {% elif order.status == 'Out of Delivery'%}
+                                <form action="updatestatus?id={{order.id}}" method="POST">
+                                    {% csrf_token %}
+                                        <select name="status" class="" id="status">
+                                            <option value="0">Update Status</option>
+                                            
+                                            {% for i in status2 %}
+                                            <option value="{{i}}">{{i}}</option>
+                                           
+                                            {% endfor %}
+                                            
+                                        </select>
+                                        <button type="submit" id ="btn1"class="btn btn-primary">Update</button>
+                                    </form>
                                 {% else %}
                                 <form action="updatestatus?id={{order.id}}" method="POST">
                                 {% csrf_token %}
                                     <select name="status" class="" id="status">
-                                        <option value="0">{{order.status}}</option>
+                                        <option value="0">Update Status</option>
                                         
                                         {% for i in status %}
                                         <option value="{{i}}">{{i}}</option>
@@ -60,6 +160,9 @@
                             </td>
                             {% if order.cancel %}
                             <td>Order Canceled</td>
+                            
+
+                            {% elif order.status == 'Return Accepted' or order.status == 'Return Rejected'%}
                             {% else %}
                             <td>
                                 <button type="button" class="btn btn-danger" data-toggle="modal" onclick = cancelOrder({{order.id}})>
@@ -105,6 +208,32 @@
               swal("Your imaginary file is safe!");
             }
           });
+    }
+    var modal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+      
+      modal.style.display = "block";
+
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
     }
 </script>
 {% endblock %}

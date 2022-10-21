@@ -16,16 +16,37 @@
                     <form action="checkout" method="POST">
                         {% csrf_token %}
                         <div class=" d-flex">
-                          <div>
+                          
+                            
+                            {% if code %}
+                            <div>
+                              {{addresses}}
+                            <input type="hidden" name="amount" value="{{total}}" id="amount">
+                            <input type="hidden" name="cart" value="{{cart}}" id ="cart">
+                            <input type="hidden" name="payment" value="Cash on Delivery" id ="cart">
+                            <input type="hidden" name="address" value="{{addresses}}" id ="address">
+                            <input type="hidden" name="amount" value="{{total}}" id="amount">
+                            <input readonly type="text" style="width:50%" name="code" id="code" placeholder="Enter the code" class="form-control w-100">
+                            <p class="text-success">You applied the coupon code {{code}} </p>
+                            </div>
+                            <div>
+                            <button type="button" id="already applied"  onclick="alreadyApplied()" class="btn btn-primary mx-2 ">Apply</button></div>
+                            {% else %}
+                            <div>
+                              {{addresses.id}}
                             <input type="hidden" name="amount" value="{{total}}" id="amount">
                             <input type="hidden" name="cart" value="{{cart}}" id ="cart">
                             <input type="hidden" name="payment" value="Cash on Delivery" id ="cart">
                             <input type="hidden" name="address" value="{{addresses.id}}" id ="address">
                             <input type="hidden" name="amount" value="{{total}}" id="amount">
                             <input type="text" style="width:50%" name="code" id="code" placeholder="Enter the code" class="form-control w-100">
-                          </div>
-                          <div>
+                            </div>
+                            <div>
                             <button type="submit" class="btn btn-primary mx-2 ">Apply</button></div>
+                            {% endif %}
+                          
+                          
+                            {% comment %} <button type="submit" class="btn btn-primary mx-2 ">Apply</button></div> {% endcomment %}
                         </div>
                     </form>
                     <hr>
@@ -35,8 +56,13 @@
                         <input type="hidden" name="amount" value="{{total}}" id="amount">
                         <input type="hidden" name="cart" value="{{cart}}" id ="cart">
                         <input type="hidden" name="payment" value="Cash on Delivery" id ="cart">
+                        {% if code %}
+                        <input type="hidden" name="address" value="{{addresses}}" id ="address">
+                        {{addresses}}
+                        {% else %}
                         <input type="hidden" name="address" value="{{addresses.id}}" id ="address">
-                        
+                        {{addresses.id}}
+                        {% endif %}
                         <button type="submit " class="btn text-light m-1" style="width: 50%; background:#1C3879;">Cash On Delivery</button>
                         <button type="button" class="btn btn-primary payWithRazorpay w-50 m-1"  data-toggle="modal" data-target="#exampleModal">
                           Pay With Razorpay
@@ -67,6 +93,13 @@
                                 <td>Shipping</td>
                                 <td>Free</td>
                             </tr>
+                            {% if code %}
+                            <tr>
+                                <td>Discount</td>
+                                <td>₹{{offer}}/-</td>
+                              
+                            </tr>
+                            {% endif %}
                             <tr>
                                 <td>Total</td>
                                 <td>₹{{total}}/-</td>
@@ -116,5 +149,9 @@
         });
       }
     }).render('#paypal-button-container');
+    
+    function alreadyApplied(){
+        swal("Already Applied", "You have already applied the code", "error");
+    }
   </script>
 {% endblock scripts %}

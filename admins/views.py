@@ -75,6 +75,17 @@ def adminhome(request):
 def users(request):
     users = User.objects.filter(is_superuser=False)
     return render(request, 'admins/user_management.html', {'users':users})
+@login_required(login_url='adminlogin')
+def acceptrequest(request):
+    id=request.GET['id']
+    Order.objects.filter(id=id).update(status='Return Accepted')
+    return redirect('order')
+
+@login_required(login_url='adminlogin')
+def rejectrequest(request):
+    id=request.GET['id']
+    Order.objects.filter(id=id).update(status='Return Rejected')
+    return redirect('order')
 
 @login_required(login_url='adminlogin')
 def addproduct(request):
@@ -118,14 +129,17 @@ def cancelorder(request):
 @login_required(login_url='adminlogin')
 def products(request):
     product=Product.objects.all()
-    
     return render(request, 'admins/product_management.html',{'products':product})
+
 @login_required(login_url='adminlogin')
 def order(request):
     order = Order.objects.all().order_by('-id')
     cart = Cart.objects.all()
-    status = ['Ordered','Shipped','Delivered','Cancelled']
-    return render(request, 'admins/ordermanagement.html',{'orders':order,'carts':cart,'status':status})
+    status = ['Shipped','Out of Delivery','Delivered']
+    status1 = ['Out of Delivery','Delivered']
+    status2 = ['Delivered']
+    
+    return render(request, 'admins/ordermanagement.html',{'orders':order,'carts':cart,'status':status,'status1':status1,'status2':status2})
 
 @login_required(login_url='adminlogin')
 def delete_product(request):
