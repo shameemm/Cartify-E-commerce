@@ -124,8 +124,8 @@
                     <h3> Reason For Return </h3>
                     <form action="returnorder?id={{order.id}}" method="POST">
                       {% csrf_token %}
-                      <textarea name="reason" id="reason" cols="30" class ="w-100" placeholder="Enter the reason"></textarea>
-                      <button type="submit" class="btn btn-primary w-100">Submit</button>
+                      <textarea name="reason" id="reason" cols="30" class ="w-100" required placeholder="Enter the reason"></textarea>
+                      <button type="submit" onclick="reason()" class="btn btn-primary w-100">Submit</button>
                     </form>
                   </div>
                 
@@ -148,7 +148,7 @@
 
 </div>
 <script>
-      // Get the modal
+    
     var modal = document.getElementById("myModal");
 
     // Get the button that opens the modal
@@ -175,6 +175,13 @@
         modal.style.display = "none";
       }
     }
+    {% comment %} function reason(){
+      var reason = document.getElementById("reason").value;
+      if(reason == ""){
+        alert("Please enter the reason");
+      }
+    } {% endcomment %}
+    
     function returnOrder(id){
         swal({
             title: "Are you sure to return the order?",
@@ -237,7 +244,7 @@
     
     });
      {% endcomment %}
-      // Get the modal
+      
       
       
   {% comment %} </script> {% endcomment %}

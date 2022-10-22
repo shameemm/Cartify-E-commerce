@@ -20,7 +20,7 @@
                             
                             {% if code %}
                             <div>
-                              {{addresses}}
+                              
                             <input type="hidden" name="amount" value="{{total}}" id="amount">
                             <input type="hidden" name="cart" value="{{cart}}" id ="cart">
                             <input type="hidden" name="payment" value="Cash on Delivery" id ="cart">
@@ -33,7 +33,7 @@
                             <button type="button" id="already applied"  onclick="alreadyApplied()" class="btn btn-primary mx-2 ">Apply</button></div>
                             {% else %}
                             <div>
-                              {{addresses.id}}
+                              
                             <input type="hidden" name="amount" value="{{total}}" id="amount">
                             <input type="hidden" name="cart" value="{{cart}}" id ="cart">
                             <input type="hidden" name="payment" value="Cash on Delivery" id ="cart">
@@ -58,10 +58,10 @@
                         <input type="hidden" name="payment" value="Cash on Delivery" id ="cart">
                         {% if code %}
                         <input type="hidden" name="address" value="{{addresses}}" id ="address">
-                        {{addresses}}
+                        
                         {% else %}
                         <input type="hidden" name="address" value="{{addresses.id}}" id ="address">
-                        {{addresses.id}}
+                        
                         {% endif %}
                         <button type="submit " class="btn text-light m-1" style="width: 50%; background:#1C3879;">Cash On Delivery</button>
                         <button type="button" class="btn btn-primary payWithRazorpay w-50 m-1"  data-toggle="modal" data-target="#exampleModal">
@@ -130,6 +130,7 @@
           purchase_units: [{
             amount: {
               value: '0.01'//'{{total}}' // Can also reference a variable or function
+              
             }
           }]
         });

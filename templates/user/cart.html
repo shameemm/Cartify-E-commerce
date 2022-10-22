@@ -1,5 +1,5 @@
 {% extends 'user/base.html'%} {% block content%}
-
+{% load guest_user %}
 
 <div class = "d -flex container">
     <div class="row my-5 ">
@@ -79,10 +79,13 @@
                                 <td>₹{{total}}/-</td>
                             </tr>
                         </table>
+                        
                         {% if total %}
-                        
+                        {% if  user|is_guest_user  %}
+                        <a href="guestsignup" class="btn btn-success">Signup to Checkout</a>
+                        {% else %}
                         <a href="checkout" class="btn btn-primary" style="width:100%; background:#1C3879;">Checkout</a>
-                        
+                        {% endif %}
                         {% endif %}
                         <a class="btn text-light mt-3" href="/" style="width:100%; background:#1C3879;">Continue Shopping</a>
                     </div>

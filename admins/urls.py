@@ -33,6 +33,10 @@ urlpatterns = [
     path('unblockcoupon',views.unblockcoupon, name='unblockcoupon'),
     path('acceptrequest',views.acceptrequest, name='acceptrequest'),
     path('rejectrequest',views.rejectrequest, name='rejectrequest'),
+    path('sales',views.sales, name='sales'),
+    path('monthly',views.monthly, name='monthly'),
+    path('yearly',views.yearly, name='yearly'),
+    
 ]
     
 if settings.DEBUG:

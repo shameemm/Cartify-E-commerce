@@ -105,6 +105,7 @@
       }
       </script>
   </head>
+  {% load guest_user %}
   <body style="background: #F9F5EB; " >
     <header>
       <nav class="navbar navbar-fixed-top " style="background: #1C3879; height:80px;  ">
@@ -119,8 +120,13 @@
             <a class="nav-link " style="color: #FFFFFF;" href="myorder">Orders</a>
             <a class="nav-link " style="color: #FFFFFF;" href="profile">Profile</a>
           
-            {% if request.user.is_authenticated %}
+            
+            
+            {% if request.user.is_authenticated and not user|is_guest_user %}
             <a class="nav-link " style="color: #FFFFFF;" href="logout">logout</a>
+            {% elif user|is_guest_user%}
+            <a class="" style="color: #FFFFFF;" href="">Guest User</a>
+            
             {% else %}
             <a class="nav-link " style="color: #FFFFFF;" href="login">login</a>
             {% endif %}

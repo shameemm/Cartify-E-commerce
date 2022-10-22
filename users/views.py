@@ -20,7 +20,66 @@ from reportlab.pdfgen import canvas
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django import template
+from guest_user.decorators import allow_guest_user
+from guest_user.models import Guest
 register = template.Library()
+
+@allow_guest_user()
+def guestsignup(request):
+    print(request.user.id)
+    id = request.user.id
+    if request.method == 'POST':
+        if request.method == 'POST' and 'otp' not in request.POST:
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            phone = request.POST['phone']
+            email = request.POST['email']
+            username = request.POST['username']
+            password = request.POST['password']
+        
+            if User.objects.filter(username=username).exists():
+                messages.info(request, 'Username Taken')
+                return redirect('guestsignup')
+            elif User.objects.filter(email=email).exists():
+                messages.info(request, 'Email Taken')
+                return redirect('guestsignup')
+            else:
+                # otp=random.randint(100000,999999)
+                # otp = otpgenerate()
+                otp = 968542
+                # print(username)
+                print(otp)
+                message_handler = MessageHandler(phone, otp).sent_otp_on_phone()
+                return render(request, "user/otpgsignup.html",{ 'first_name': first_name, 'last_name': last_name, 'phone': phone, 'email': email, 'username': username, 'password': password, 'otp': otp})
+        elif request.method == 'POST':
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            phone = request.POST['phone']
+            email = request.POST['email']
+            username = request.POST['username']
+            password = request.POST['password']
+            print("username=", username)
+            print(password)
+            otp = 968542
+            otp1 =int( request.POST['otp'])
+            # print("otp1=",otp1)
+            if otp==otp1:
+                user = User.objects.create_user(id=id,first_name=first_name, last_name=last_name,  username=username, email=email, password=password)
+                user.save_base()
+                user_id = User.objects.get(username=username)
+                account = Accounts.objects.create(user=user_id, phone=phone)
+                account.save()
+                guest = Guest.objects.get(user_id=id)
+                guest.delete()
+                print('user created')
+                return render(request,'user/login.html')
+            else:
+                messages.info(request, "Invalid Otp")
+                return render(request, 'user/otpgsignup.html')
+    else:
+        return render(request, 'user/guestsignup.html')
+        
+    
 
 @register.simple_tag()
 def multiply(qty, unit_price, *args, **kwargs):
@@ -406,7 +465,7 @@ def payment(request):
 @login_required(login_url='login')
 def returnorder(request):
     print(request.GET['id'])
-    id=int(request.GET['id'])-1
+    id=int(request.GET['id'])
     print(id)
     order = Order.objects.get(id=id)
     user = request.user
@@ -415,7 +474,7 @@ def returnorder(request):
     order = Order.objects.filter(id=id).update(status=status, reason=reason)
     
     print(order)
-    request.save()
+    
     return redirect('myorder')
 
 @login_required(login_url='login')
@@ -445,6 +504,7 @@ def deleteaddress(request):
     address.delete()
     return redirect('profile')
 
+@allow_guest_user
 @login_required(login_url='login')
 def addtocart(request):
     pid = request.GET['pid']

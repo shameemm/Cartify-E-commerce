@@ -29,6 +29,7 @@ urlpatterns = [
     path('invoice',views.invoice,name='invoice'),
     path('returnorder',views.returnorder,name='returnorder'),
     # path('applycoupon',views.applycoupon,name='applycoupon'),
+    path('guestsignup',views.guestsignup,name='guestsignup'),
     
 ]
 

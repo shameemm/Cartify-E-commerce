@@ -11,6 +11,10 @@ from xhtml2pdf import pisa
 from django import template
 import pandas as pd
 from django.http import FileResponse
+from guest_user.decorators import allow_guest_user
+
+
+
 # Create your views here.
 def adminlogin(request):
     if request.user.is_authenticated and request.user.is_superuser:
@@ -132,6 +136,11 @@ def products(request):
     return render(request, 'admins/product_management.html',{'products':product})
 
 @login_required(login_url='adminlogin')
+def sales(request):
+    orders=Order.objects.all().order_by('-id')
+    return render(request, 'admins/sales.html',{'orders':orders})
+
+@login_required(login_url='adminlogin')
 def order(request):
     order = Order.objects.all().order_by('-id')
     cart = Cart.objects.all()
@@ -222,8 +231,13 @@ def addoffer(request):
 @login_required(login_url='adminlogin')
 def report(request):
     print(request.method)
-    type = request.POST['report_type']
-    order = Order.objects.all()
+    start = request.POST['start_date']
+    end = request.POST['end_date']
+    print("end=",end)
+    order = Order.objects.filter(ordered_date__range=[start,end])
+    print(order)
+    type = request.POST['type']
+    # order = Order.objects.all()
     print(type)
     if type == 'PDF':
         
@@ -261,7 +275,87 @@ def report(request):
         # response['Content-Disposition'] = 'filename="report.xlsx"'
         return FileResponse(open('report.xlsx', 'rb'), as_attachment=True, filename="report.xlsx")
         
-    
+@login_required(login_url='adminlogin')
+def yearly(request):
+    year = request.POST['year']
+    type = request.POST['type']
+    order = Order.objects.filter(ordered_date__year=year)
+    if type == 'PDF':
+        
+        template_path = 'admins/report.html'
+
+        context = {'order': order}
+
+        response = HttpResponse(content_type='application/pdf')
+
+        response['Content-Disposition'] = 'filename="invoice.pdf"'
+
+        template = get_template(template_path)
+
+        html = template.render(context)
+
+        # create a pdf
+        pisa_status = pisa.CreatePDF(
+        html, dest=response)
+        # if error then show some funy view
+        if pisa_status.err:
+            return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        return response
+    else:
+        data =[]
+        for order in order:
+            data.append({
+                "id":order.id,
+                "Customer":order.user.username,
+                "Ordered date":str(order.ordered_date),
+                "Amount":order.amount,
+                "Payment Method":order.method,
+                "Order Status":order.status,
+            })
+        pd.DataFrame(data).to_excel("report.xlsx")
+        # response['Content-Disposition'] = 'filename="report.xlsx"'
+        return FileResponse(open('report.xlsx', 'rb'), as_attachment=True, filename="report.xlsx")
+@login_required(login_url='adminlogin')
+def monthly(request):
+    month = request.POST['month']
+    type = request.POST['type']
+    order = Order.objects.filter(ordered_date__month=month)
+    if type == 'PDF':
+        
+        template_path = 'admins/report.html'
+
+        context = {'order': order}
+
+        response = HttpResponse(content_type='application/pdf')
+
+        response['Content-Disposition'] = 'filename="invoice.pdf"'
+
+        template = get_template(template_path)
+
+        html = template.render(context)
+
+        # create a pdf
+        pisa_status = pisa.CreatePDF(
+        html, dest=response)
+        # if error then show some funy view
+        if pisa_status.err:
+            return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        return response
+    else:
+        data =[]
+        for order in order:
+            data.append({
+                "id":order.id,
+                "Customer":order.user.username,
+                "Ordered date":str(order.ordered_date),
+                "Amount":order.amount,
+                "Payment Method":order.method,
+                "Order Status":order.status,
+            })
+        pd.DataFrame(data).to_excel("report.xlsx")
+        # response['Content-Disposition'] = 'filename="report.xlsx"'
+        return FileResponse(open('report.xlsx', 'rb'), as_attachment=True, filename="report.xlsx")
+
 @login_required(login_url='adminlogin')
 def blockcoupon(request):
     id=request.GET['id']
