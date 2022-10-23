@@ -2,20 +2,7 @@
 <div class="container">
 <div class = "row d-flex">
 <div class = "col-md-6"></div>
-<div class = "col-md-6 bg-light rounded p-2 mt-2 ">
-    <form action="report" method="POST">
-        {% csrf_token %}
-        <label>Generate Report:  </label>
-        <select name="report_type" class="ms-3" id ="report_type">
-            <option value="PDF">PDF</option>
-            <option value="Excel">Excel</option>
-            
-           
-        </select>
-        <button type="submit" class="btn btn-sm btn-primary">Generate</button>
-    {% comment %} <a href="report" class="btn  btn-primary">report</a></div> {% endcomment %}
-    </form>
-</div>
+
 </div>
 <div class="container d-flex">
    

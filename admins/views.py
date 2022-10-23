@@ -77,7 +77,7 @@ def adminhome(request):
 
 @login_required(login_url='adminlogin')
 def users(request):
-    users = User.objects.filter(is_superuser=False)
+    users = User.objects.filter(is_superuser=False, first_name__isnull=False)
     return render(request, 'admins/user_management.html', {'users':users})
 @login_required(login_url='adminlogin')
 def acceptrequest(request):
@@ -211,16 +211,16 @@ def offers(request):
 def addoffer(request):
     if request.method == 'POST':
         name = request.POST['name']
-        code = request.POST['code']
         offer = request.POST['offer']
         startdate = request.POST['startdate']
+        max_value = request.POST['max_value']
         print(startdate)
         enddate = request.POST['enddate']
         print( "end",enddate)
         category = request.POST['category']
         product = request.POST['product']
         print(product)
-        offer = Offers.objects.create(name=name,code=code,offer=offer,start_date=startdate,end_date=enddate,category_id=category,product_id=product)
+        offer = Offers.objects.create(name=name,offer=offer,start_date=startdate,end_date=enddate,category_id=category,product_id=product,max_value=max_value)
         offer.save()
         return redirect('offers')
     else:

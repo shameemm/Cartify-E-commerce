@@ -89,7 +89,7 @@ def multiply(qty, unit_price, *args, **kwargs):
 
 
 def login(request):
-    if request.user.is_authenticated and request.user.is_superuser == False:
+    if request.user.is_authenticated and request.user.is_superuser == False and request.user.first_name != '':
         return redirect('index')
     if request.method == 'POST' and 'username' in request.POST and 'password' in request.POST and 'otp' not in request.POST:
         username = request.POST['username']
@@ -225,12 +225,22 @@ def removecart(request):
 def view_product(request):
     print(request.session['cart'])
     id = request.GET['id']
+    print(id)
     product = Product.objects.get(id=id)
     print(product)
     prdct = Product.objects.filter(id=id)
     print(prdct)
     images = Images.objects.filter(product=prdct[0].id)
-    print(images)
+    offers = Offers.objects.all()
+    for offer in offers:
+        print("offer")
+        if offer.product == product:
+            print("offer = ",offer.name)
+            return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
+        elif offer.category == product.category:
+            print("offer = ",offer.name)
+            return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
+    
     return render(request, 'user/view_product.html', {'product': product, 'images':images})
 
 def razorpay(request):
@@ -288,8 +298,6 @@ def otplogin(request):
     print(user.username)
     print(user.password)
     if Accounts.objects.filter(otp=otp).exists():
-        # user = auth.authenticate(
-        #     request, username=user.username)
         print("user=",user)
         auth.login(request, user)
         return redirect('index')
@@ -303,23 +311,26 @@ def cart(request):
     if request.user.is_authenticated:
         user = request.user
         cart = Cart.objects.filter(user=user)
-
+        offers = Offers.objects.all()
         for i in range(len(cart)):
-
             if cart[i].quantity < 1:
                 cart[i].delete()
         if len(cart) == 0:
             empty = "Cart is Empty"
-            return render(request, 'user/cart.html', {'empty': empty})
+            return render(request, 'user/cart.html', {'empty': empty, 'offers': offers})
         else:
             subtotal = 0
             for i in range(len(cart)):
                 if cart[i].cancel != True:
-                    x = cart[i].product.price*cart[i].quantity
-                    subtotal = subtotal+x
+                    if cart[i].price_with_offer !=0:
+                        x = cart[i].price_with_offer*cart[i].quantity
+                        subtotal = subtotal+x
+                    else:
+                        x = cart[i].product.price*cart[i].quantity
+                        subtotal = subtotal+x
             shipping = 0
             total = subtotal + shipping
-            return render(request, 'user/cart.html', {'cart': cart, 'subtotal': subtotal, 'total': total})
+            return render(request, 'user/cart.html', {'cart': cart, 'subtotal': subtotal, 'total': total, 'offers': offers})
     else:
         return redirect('login')
 
@@ -336,21 +347,26 @@ def addaddress(request):
         address = Address.objects.create(
             name=name, phone=phone, address=address, city=city, state=state, pincode=pincode, user=user)
         address.save()
-        return redirect('payment')
+        return redirect('checkout')
     else:
         return render(request, 'user/addaddress.html')
+    
 @login_required(login_url='login')
 def checkout(request):
     print('checkput')
     if request.method == 'POST' and 'address_id' in request.POST :
-        
         address_id = request.POST['address_id']
         address = Address.objects.get(id=address_id)
         cart = Cart.objects.filter(user=request.user)
         subtotal = 0
         for i in range(len(cart)):
-            x = cart[i].product.price*cart[i].quantity
-            subtotal = subtotal+x
+            if cart[i].cancel != True:
+                if cart[i].price_with_offer !=0:
+                    x = cart[i].price_with_offer*cart[i].quantity
+                    subtotal = subtotal+x
+                else:
+                    x = cart[i].product.price*cart[i].quantity
+                    subtotal = subtotal+x
         shipping = 0
         total = subtotal+shipping
         return render(request, 'user/payment.html', {'subtotal': subtotal, 'total': total, 'addresses': address,'cart':cart})
@@ -360,22 +376,29 @@ def checkout(request):
         amount = request.POST['amount']
         address = request.POST['address']
         cart = Cart.objects.filter(user=user)
-        
         print("address",address)
         total = float(request.POST['amount'])
         code = request.POST['code']
         print(code)
         subtotal = 0
         for i in range(len(cart)):
-            x = cart[i].product.price*cart[i].quantity
-            subtotal = subtotal+x
+            if cart[i].cancel != True:
+                if cart[i].price_with_offer !=0:
+                    x = cart[i].price_with_offer*cart[i].quantity
+                    subtotal = subtotal+x
+                else:
+                    x = cart[i].product.price*cart[i].quantity
+                    subtotal = subtotal+x
         shipping = 0
-        offer = Offers.objects.get(code=code)
-        total = total-offer.offer
-        print(amount)
-        return render(request, 'user/payment.html', { 'subtotal':subtotal,'total': total, 'addresses': address,'cart':cart, 'code':code, 'offer':offer.offer})
-        # return redirect('payment')
-        
+        message=False
+        coupon = Coupon.objects.get(code=code)
+        if total>coupon.min_amount:
+            total = total-coupon.discount
+        else:
+            message = "Minimum Amount is not reached"    
+        print(message)
+        print(total)
+        return render(request, 'user/payment.html', { 'subtotal':subtotal,'total': total,'message':message, 'addresses': address,'cart':cart, 'code':code, 'offer':coupon.code})
     else:
         print('else===')
         user = request.user
@@ -385,10 +408,14 @@ def checkout(request):
         print(cart)
         subtotal = 0
         for i in range(len(cart)):
-            x = cart[i].product.price*cart[i].quantity
-            subtotal = subtotal+x
-        shipping = 0
-        total = subtotal+shipping
+            if cart[i].cancel != True:
+                if cart[i].price_with_offer !=0:
+                    x = cart[i].price_with_offer*cart[i].quantity
+                    subtotal = subtotal+x
+                else:
+                    x = cart[i].product.price*cart[i].quantity
+                    subtotal = subtotal+x
+        total = subtotal
         # return HttpResponse('else')
         return render(request, 'user/checkout.html', {'subtotal': subtotal, 'total': total, 'addresses': addresses})
 
@@ -411,26 +438,22 @@ def payment(request):
         shipping = 0
         total = subtotal + shipping
         crt = Cart.objects.filter(user=user)
-        
         print(method)
         order = Order.objects.create(
             user=user, address=address, amount=amount, method=method)
         order.save()
-        
-
         for i in range(len(cart)):
             oldcart = OldCart.objects.create(
                 user=user, quantity=crt[i].quantity, product=crt[i].product, order=order)
             oldcart.save()
-
         cart.delete()
         prdcts=OldCart.objects.filter(order=order)
-        for i in range(len(prdcts)):
+        for i in range(len(prdcts)-1):
             p=Product.objects.filter(id=prdcts[i].product.id)
-            print("qty",p[i].quantity)
-            print("cartqty",prdcts[i].quantity)
-            print("pqty",p[i].quantity-prdcts[i].quantity)
-            print("pid",prdcts[i].product.id)
+            # # print("qty",p[i].quantity)
+            # print("cartqty",prdcts[i].quantity)
+            # print("pqty",p[i].quantity-prdcts[i].quantity)
+            # print("pid",prdcts[i].product.id)
             Product.objects.filter(id=prdcts[i].product.id).update(quantity=p[i].quantity-prdcts[i].quantity)
         success = True
         product = Product.objects.all()
@@ -440,7 +463,6 @@ def payment(request):
         if payMode=='Razorpay':
             print(payMode)
             return JsonResponse({'status' : "Your Order has been placed successfully"})
-        
         return render(request, 'user/home.html', {'user': user, 'products': product, 'categories': categories, 'success': success})
     else:
         user = request.user
@@ -511,6 +533,7 @@ def addtocart(request):
     # quantity = request.POST['quantity']
     # print(quantity)
     product = Product.objects.get(id=pid)
+    offers = Offers.objects.all()
     
     uid = request.user
     print("pid =", pid)
@@ -521,6 +544,20 @@ def addtocart(request):
         cart.save()
         return redirect('cart')
     else:
+        for offer in offers:
+            if offer.product == product:
+                price = 0
+                offamount = product.price * offer.offer / 100
+                if offamount > offer.max_value:
+                    price = product.price - offer.max_value
+                else:
+                    price = product.price - offamount
+                print(price)
+                cart = Cart.objects.create(
+                    user=uid, product=product, quantity=1, price_with_offer=price)
+                cart.save()
+                return redirect('cart')
+        
         cart = Cart.objects.create(product=product, user=uid)
         cart = Cart.objects.filter(user=uid)
         return redirect('cart')

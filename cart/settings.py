@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'cropperjs',
     'guest_user',
+    'mathfilters',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'

@@ -1,5 +1,5 @@
 {% extends 'user/base.html'%} {% block content%}
-{% load guest_user %}
+{% load guest_user %} {% load mathfilters %}
 
 <div class = "d -flex container">
     <div class="row my-5 ">
@@ -27,6 +27,22 @@
                                         <h4>{{cart.product.name}}</h4>
                                         <p>{{cart.product.description}}</p>
                                         <p>Price: ₹{{cart.product.price}}/-</p>
+                                        {% for offer in offers %}
+                                        
+                                        {% if offer.category.id == cart.product.category.id  or offer.product.id == cart.product.id %}
+                                        <p>Offer: {{offer.offer}}% off upto {{offer.max_value}}</p>
+                                        {% with offer1=cart.product.price|div:100|mul:offer.offer|floatformat:2 %}
+                                        {% with offer2=cart.product.price|sub:offer1|floatformat:2 %}
+                                        {% if offer2 < offer.max_value %}
+                                            Offer Price = ₹{{offer2}}/-
+                                        {% else %}
+                                            Offer Price = ₹{{cart.product.price|sub:offer.max_value}}/-
+                                        {% endif %}
+                                        {% endwith %}
+                                        {% endwith %}
+                                        
+                                        {% endif %}
+                                        {% endfor %}
                                         <p>Quantity </p> 
                                         <div class="d-flex input-group text-center ">
                                             <div class="">
@@ -55,6 +71,7 @@
                     </div>
                 </div>
             </div>
+            
             {% if empty  %}
 
 
@@ -82,7 +99,7 @@
                         
                         {% if total %}
                         {% if  user|is_guest_user  %}
-                        <a href="guestsignup" class="btn btn-success">Signup to Checkout</a>
+                        <a href="guestsignup" class="btn btn-success w-100">Signup to Checkout</a>
                         {% else %}
                         <a href="checkout" class="btn btn-primary" style="width:100%; background:#1C3879;">Checkout</a>
                         {% endif %}

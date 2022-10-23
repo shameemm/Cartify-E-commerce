@@ -7,8 +7,7 @@ class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     is_active = models.BooleanField(default=True)
-
-
+    
 # class Sales(models.Model):
 # 	date = models.DateField()
 
@@ -52,12 +51,11 @@ class Images(models.Model):
 class Offers(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, null=True, blank=True)
-
     name = models.CharField(max_length=200)
     offer = models.IntegerField()
     start_date = models.DateField()
-    code = models.CharField(max_length=50, default='')
     end_date = models.DateField()
+    max_value = models.IntegerField(default=0)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=True, blank=True)
     is_active = models.BooleanField(default=True)
@@ -69,6 +67,7 @@ class Coupon(models.Model):
     code = models.CharField(max_length=50)
     discount = models.IntegerField()
     start_date = models.DateField()
+    min_amount = models.IntegerField(default=0)
     end_date = models.DateField()
     is_active = models.BooleanField(default=True)
 

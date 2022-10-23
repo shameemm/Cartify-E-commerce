@@ -99,7 +99,7 @@
                                     </div>
                                     
                                 </div>
-                                {% elif order.status == 'Return Accepted' or order.status == 'Return Rejected'%}
+                                {% elif order.status == 'Return Accepted' or order.status == 'Return Rejected' or order.status == 'Delivered' %}
                                 {% comment %} <form action="updatestatus?id={{order.id}}" method="POST">
                                     {% csrf_token %}
                                         <select name="status" class="" id="status">
@@ -162,13 +162,12 @@
                             <td>Order Canceled</td>
                             
 
-                            {% elif order.status == 'Return Accepted' or order.status == 'Return Rejected'%}
+                            {% elif order.status == 'Return Accepted' or order.status == 'Return Rejected' or order.status == 'Delivered' or order.status == 'Return Requested'%}
                             {% else %}
                             <td>
                                 <button type="button" class="btn btn-danger" data-toggle="modal" onclick = cancelOrder({{order.id}})>
-                                    Cancel Order</button
-                                {% comment %} <a class="btn btn-danger" href= "cancelorder?id={{order.id}}" ><i style=""onclick="return confirm('Are you sure to cancel the order ?')">Cancel Order</i>
-                                    </a> {% endcomment %}
+                                    Cancel Order</button>
+                                
                                 </td>
                             {% endif %}
                         </tr>
