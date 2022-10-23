@@ -259,16 +259,43 @@ def minus(request):
     cart = Cart.objects.get(id=id)
     qty = cart.quantity-1
     print(qty)
+    
+    crt = Cart.objects.filter(user=request.user)
     Cart.objects.filter(id=id).update(quantity=qty)
-    return redirect('cart')
+    # return redirect('cart')
+    subtotal = 0
+    for i in range(len(crt)):
+        if crt[i].cancel != True:
+            if crt[i].price_with_offer !=0:
+                x = crt[i].price_with_offer*crt[i].quantity
+                subtotal = subtotal+x
+            else:
+                x = crt[i].product.price*crt[i].quantity
+                subtotal = subtotal+x
+    shipping = 0
+    total = subtotal + shipping
+    return JsonResponse({'data': qty,'total':total,'subtotal':subtotal})
 
 def up(request):
     id = request.GET['id']
+    crt = Cart.objects.filter(user=request.user)
     cart = Cart.objects.get(id=id)
     qty = cart.quantity+1
     print(qty)
     Cart.objects.filter(id=id).update(quantity=qty)
-    return redirect('cart')
+    subtotal = 0
+    for i in range(len(crt)):
+        if crt[i].cancel != True:
+            if crt[i].price_with_offer !=0:
+                x = crt[i].price_with_offer*crt[i].quantity
+                subtotal = subtotal+x
+            else:
+                x = crt[i].product.price*crt[i].quantity
+                subtotal = subtotal+x
+    shipping = 0
+    total = subtotal + shipping
+    # return redirect('cart')
+    return JsonResponse({'data': qty,'total':total,'subtotal':subtotal})
 
 
 def getotp(request):
