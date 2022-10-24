@@ -38,8 +38,10 @@ def guestsignup(request):
             password = request.POST['password']
         
             if User.objects.filter(username=username).exists():
-                messages.info(request, 'Username Taken')
-                return redirect('guestsignup')
+                # messages.info(request, 'Username Taken')
+                # return redirect('guestsignup')
+                userexist = "Username Taken"
+                return JsonResponse({'userexist': userexist})
             elif User.objects.filter(email=email).exists():
                 messages.info(request, 'Email Taken')
                 return redirect('guestsignup')
@@ -425,7 +427,7 @@ def checkout(request):
             message = "Minimum Amount is not reached"    
         print(message)
         print(total)
-        return render(request, 'user/payment.html', { 'subtotal':subtotal,'total': total,'message':message, 'addresses': address,'cart':cart, 'code':code, 'offer':coupon.code})
+        return render(request, 'user/payment.html', { 'subtotal':subtotal,'total': total,'message':message, 'addresses': address,'cart':cart, 'code':code, 'offer':coupon})
     else:
         print('else===')
         user = request.user

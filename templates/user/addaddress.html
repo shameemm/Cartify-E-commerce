@@ -35,11 +35,29 @@
                         <label for="pincode">Pincode</label>
                         <input type="text" class="form-control" name="pincode" id="pincode" placeholder="Enter your pincode">
                     </div>
-                    
-                    <button class="btn my-2 text-light" type="submit" style="width:100%; background:#1C3879;">Add Address</button> 
+                    <span id="validate" class="text-danger"> </span>
+                    <button class="btn my-2 text-light" id="btn" type="submit" style="width:100%; background:#1C3879;">Add Address</button> 
                 </form> 
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('#btn').click(()=>{
+        var name = $('#name').val()
+        var phone = $('#phone').val()
+        var address = $('#address').val()
+        var city = $('#city').val()
+        var state = $('#state').val()
+        var pincode = $('#pincode').val()
+
+        if (name == '' || phone == '' || address == '' || city == '' || state == '' || pincode == ''){
+            $('#validate').html('Enter all the fields')
+            return false
+        }
+        else{
+            return true
+        }
+    })
+</script>
 {% endblock content %}
