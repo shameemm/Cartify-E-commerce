@@ -127,7 +127,9 @@
                         <option value="Excel">Excel</option>
                     </select>
                     
-                                
+                    {% for message in messages  %}
+                    <span class="text-danger">{{message}}</span>
+                    {% endfor %}            
                     <button type="submit" id="generate" class="btn btn-primary mt-2 mb-1 w-100 ">Generate</button>
                         
                     </div>
@@ -163,25 +165,7 @@
     </div>
 
 <script>
-    //$('#generate').click(()=>{
-    //    alert("aaa")
-    //    var start_date = $("#start_date").val();
-    //    var end_date = $("#end_date").val();
-    //    var report_type = $("#report_type").val();
-    //    if(start_date == '' || end_date == ''){
-    //        $("#error").html("Select Both dates")
-    //        return false;
-    //    else{
-    //        $.ajax({
-    //            url:"report",
-    //            method:"POST",
-    //            data:{start_date:start_date, end_date:end_date, report_type:report_type},
-    //            success:function(data){
-    //                alert(data);
-    //            }
-    //        })
-    //    }
-    //})
+    
     var modal = document.getElementById("myModal");
 
     // Get the button that opens the modal

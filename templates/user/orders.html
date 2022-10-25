@@ -1,4 +1,4 @@
-{% extends 'user/base.html'%} {% block content%}
+{% extends 'user/base.html'%} {% block content%}{% load mathfilters %}
 <style>
   
   
@@ -97,7 +97,7 @@
                         {% comment %} <p>Order Cancelled</p> {% endcomment %}
                         {% elif order.status == 'Delivered'%}
                         {% comment %} <button class="" id="myModal">Return</button> {% endcomment %}
-                        <button type="button" id="myBtn" class="btn"> Return </button>
+                        <button type="button" id="myBtn" class="btn" onclick="return({{order.id}})"> Return </button>
                        
                         
                         {% elif order.status == 'Return Requested' %}
@@ -122,6 +122,7 @@
                   <div class="modal-content">
                     <span class="close">&times;</span>
                     <h3> Reason For Return </h3>
+                    {{order.id}}
                     <form action="returnorder?id={{order.id}}" method="POST">
                       {% csrf_token %}
                       <textarea name="reason" id="reason" cols="30" class ="w-100" required placeholder="Enter the reason"></textarea>
@@ -157,9 +158,9 @@
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
-    // When the user clicks the button, open the modal 
+    // When the user clicks the button, open the modal
+    
     btn.onclick = function() {
-      
       modal.style.display = "block";
 
     }

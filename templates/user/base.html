@@ -120,7 +120,7 @@
             {% if request.user.is_authenticated and not user|is_guest_user %}
             <a class="nav-link " style="color: #FFFFFF;" href="cart">Cart</a>
             {% elif user|is_guest_user%}
-            <a class="nav-link " style="color: #FFFFFF;" href="login">Cart</a>
+            <a class="nav-link " style="color: #FFFFFF;" href="cart">Cart</a>
             {% endif %}
 
             {% if request.user.is_authenticated and not user|is_guest_user %}

@@ -236,6 +236,12 @@ def report(request):
     print("end=",end)
     order = Order.objects.filter(ordered_date__range=[start,end])
     print(order)
+    n=len(order)
+    print(n)
+    if n==0:
+        messages.error(request, 'No Order Found')
+        return redirect('sales')
+    print(order)
     type = request.POST['type']
     # order = Order.objects.all()
     print(type)
@@ -280,6 +286,10 @@ def yearly(request):
     year = request.POST['year']
     type = request.POST['type']
     order = Order.objects.filter(ordered_date__year=year)
+    n=len(order)
+    if n==0:
+        messages.error(request, 'No Order Found')
+        return redirect('sales')
     if type == 'PDF':
         
         template_path = 'admins/report.html'
@@ -320,6 +330,10 @@ def monthly(request):
     month = request.POST['month']
     type = request.POST['type']
     order = Order.objects.filter(ordered_date__month=month)
+    n=len(order)
+    if n==0:
+        messages.error(request, 'No Order Found')
+        return redirect('sales')
     if type == 'PDF':
         
         template_path = 'admins/report.html'
