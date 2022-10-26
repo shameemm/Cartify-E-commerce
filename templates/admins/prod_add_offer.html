@@ -10,7 +10,7 @@
                 <h4>Add Offer</h4>
             </div>
             <div class="card-body">
-                <form action="addoffer" id="image-form" method ="POST" enctype="multipart/form-data">
+                <form action="prod_addoffer" id="image-form" method ="POST" enctype="multipart/form-data">
                   {% csrf_token %}
                   <div class="form-group my-1" >
                     <label for="pname">Name</label>
@@ -48,20 +48,7 @@
                             {% endfor %}
                         </select>
                         </div>
-                        <div class= "form-group my-1">
-                            <label >Select Category</label>
-                            <select class="form-control" name="category" id="category">
-                                <option value="">Select Category</option>
-                                {% for category in categories %}
-                                <option value="{{category.id}}">{{category.name}}</option>
-                                {% endfor %}
-                            </select>
-                        <div>
-                            <div id="#alert-box"></div>
-
-                    
-                    
-                    
+                        <div id="#alert-box"></div>
                     <button type="submit" class="btn my-1 " id="btn1" style="background:#94D3AC;">Add Offer</button>
                   </form>
             </div>

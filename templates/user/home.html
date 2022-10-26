@@ -14,7 +14,7 @@
   <div class="container d-flex ">
     {% for category in categories %}
     <div>
-      <a href="category/{{category.id}}" class="text-decoration-none ">{{category.name}}</a>      
+      <a href="category?id={{category.id}}" class="text-decoration-none ">{{category.name}}</a>      
     </div>
     {% endfor %}
   </div>

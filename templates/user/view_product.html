@@ -47,6 +47,8 @@
           </p>
           {% if offer %}
           <p class="mb-4 fs-6" style="color: #4f4f4e"> This product has {{offer.offer}}% off upto ₹{{offer.max_value}}/-</p>
+          {% elif ofr%}
+          <p class="mb-4 fs-6" style="color: #4f4f4e"> This product has {{ofr.offer}}% off upto ₹{{ofr.max_value}}/-</p>
           {% endif %}
           {% comment %} <form action="addtocart?pid={{product.id}}" method="POST">
             {% csrf_token %}

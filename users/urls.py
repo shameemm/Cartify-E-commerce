@@ -30,6 +30,7 @@ urlpatterns = [
     path('returnorder',views.returnorder,name='returnorder'),
     # path('applycoupon',views.applycoupon,name='applycoupon'),
     path('guestsignup',views.guestsignup,name='guestsignup'),
+    path('category',views.category,name='category'),
     
 ]
 

@@ -53,6 +53,7 @@ class Offers(models.Model):
         Product, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=200)
     offer = models.IntegerField()
+    offer_type = models.CharField(max_length=200, null=True, blank=True, default='product')
     start_date = models.DateField()
     end_date = models.DateField()
     max_value = models.IntegerField(default=0)

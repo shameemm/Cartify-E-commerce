@@ -91,6 +91,47 @@ def multiply(qty, unit_price, *args, **kwargs):
 
 
 def login(request):
+    if request.user:
+        print(request.user.id)
+        cart = Cart.objects.get(user=request.user)
+        print(cart.product)
+        if request.user.is_superuser:
+            return redirect('adminhome')
+        if request.method == 'POST':
+            # username = request.POST['username']
+            # password = request.POST['password']
+            # user = auth.authenticate(username=username, password=password)
+            # if user is not None:
+            #     auth.login(request, user)
+            #     return redirect('index')
+            # else:
+            #     messages.info(request, 'invalid credentials')
+            #     return redirect('login')
+            username = request.POST['username']
+            password = request.POST['password']
+            
+            user = auth.authenticate(request, username=username, password=password)
+            if user is not None and user.is_active and user.is_superuser == False:
+                auth.login(request, user)
+                pid = cart.product_id
+                uid = user.id
+                if Cart.objects.filter(product=pid, user=uid).exists():
+                    cart = Cart.objects.get(product=pid, user=user)
+                    cart.quantity = cart.quantity+1
+                    cart.save()
+                    return redirect('index')
+                else:
+                    cart = Cart.objects.filter(user=request.user).update(user=user)
+                    print(user)
+                    print("req",request.user)
+                    return redirect('index')
+            else:
+                messages.info(request, "Invalid Credentials")
+            return redirect('login')
+            cart = Cart.objects.filter(user=request.user).update(user=user)
+            print(user)
+            print("req",request.user)
+        
     if request.user.is_authenticated and request.user.is_superuser == False and request.user.first_name != '':
         return redirect('index')
     if request.method == 'POST' and 'username' in request.POST and 'password' in request.POST and 'otp' not in request.POST:
@@ -235,13 +276,38 @@ def view_product(request):
     images = Images.objects.filter(product=prdct[0].id)
     offers = Offers.objects.all()
     for offer in offers:
-        print("offer")
-        if offer.product == product:
-            print("offer = ",offer.name)
-            return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
-        elif offer.category == product.category:
-            print("offer = ",offer.name)
-            return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
+        if offer.product == prdct[0]:
+            # print("offer=",offer.name)
+            for ofr in offers:
+                # print("offer=",offer.name)
+                if ofr.category == product.category:
+                    print("ofr=",ofr.name)
+                    if ofr.offer<offer.offer:
+                        print("offer",offer.offer)
+                        return render(request, 'user/view_product.html',{'product': product, 'images': images, 'offer': offer})
+                    else:
+                        return render(request, 'user/view_product.html',{'product': product, 'images': images, 'offer':ofr})
+                # else:
+                    
+        else: 
+            for ofr in offers:
+                # print("offer=",offer.name)
+                if ofr.category == product.category:
+                    print("elseofr=",ofr.name)
+                    return render(request, 'user/view_product.html',{'product': product, 'images': images, 'offer':ofr})
+                        
+                        
+                    
+            # print(offer)
+            # return render(request, 'user/product.html', {'product': product, 'images': images, 'offer': offer})
+    # for offer in offers:
+        
+    #     if offer.product == product and offer.category == product.category:
+    #         print("offer = ",offer.name)
+    #         return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
+    #     elif offer.category == product.category:
+    #         print("offer = ",offer.name)
+    #         return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
     
     return render(request, 'user/view_product.html', {'product': product, 'images':images})
 
@@ -599,6 +665,11 @@ def cancelorder(request):
     return JsonResponse({'status': True})
     # return redirect('myorder')
 
+def category(request):
+    id=request.GET['id']
+    product=Product.objects.filter(category=id)
+    categoty=Category.objects.all()
+    return render(request,'user/home.html',{'products':product,'categories':categoty})
 
 def logout(request):
     # user=request.user

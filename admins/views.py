@@ -204,11 +204,31 @@ def block(request):
     return redirect('users')
 @login_required(login_url='adminlogin')
 def offers(request):
-    offer=Offers.objects.all().order_by('-id')
-    return render(request, 'admins/offer_management.html',{'offers':offer}) 
+    prod_offer = Offers.objects.filter(offer_type='product')
+    category_offer = Offers.objects.filter(offer_type='category')
+    return render(request, 'admins/offer_management.html',{'prod_offers':prod_offer,'category_offers':category_offer})
 
 @login_required(login_url='adminlogin')
-def addoffer(request):
+def prod_addoffer(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        offer = request.POST['offer']
+        startdate = request.POST['startdate']
+        max_value = request.POST['max_value']
+        print(startdate)
+        enddate = request.POST['enddate']
+        print( "end",enddate)
+        product = request.POST['product']
+        print(product)
+        offer = Offers.objects.create(name=name,offer=offer,start_date=startdate,end_date=enddate,offer_type='product',product_id=product,max_value=max_value)
+        offer.save()
+        return redirect('offers')
+    else:
+        products=Product.objects.all()
+        return render(request, "admins/prod_add_offer.html",{'products':products})
+
+@login_required(login_url='adminlogin')
+def cate_addoffer(request):
     if request.method == 'POST':
         name = request.POST['name']
         offer = request.POST['offer']
@@ -218,15 +238,13 @@ def addoffer(request):
         enddate = request.POST['enddate']
         print( "end",enddate)
         category = request.POST['category']
-        product = request.POST['product']
-        print(product)
-        offer = Offers.objects.create(name=name,offer=offer,start_date=startdate,end_date=enddate,category_id=category,product_id=product,max_value=max_value)
+         
+        offer = Offers.objects.create(name=name,offer=offer,start_date=startdate,end_date=enddate,offer_type='category',category_id=category,max_value=max_value)
         offer.save()
         return redirect('offers')
     else:
-        products=Product.objects.all()
-        categories=Category.objects.all()
-        return render(request, "admins/add_offer.html",{'products':products,'categories':categories})
+        category=Category.objects.all()
+        return render(request, "admins/cate_add_offer.html",{'category':category})
     
 @login_required(login_url='adminlogin')
 def report(request):
@@ -367,7 +385,7 @@ def monthly(request):
                 "Order Status":order.status,
             })
         pd.DataFrame(data).to_excel("report.xlsx")
-        # response['Content-Disposition'] = 'filename="report.xlsx"'
+        # response['Content-Disposition'] = 'filename="report.xlsx"
         return FileResponse(open('report.xlsx', 'rb'), as_attachment=True, filename="report.xlsx")
 
 @login_required(login_url='adminlogin')

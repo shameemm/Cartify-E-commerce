@@ -1,16 +1,56 @@
 {% extends 'admins/admin_base.html' %}
 {% block content %}
-<div class="container">
-    <div class="col-md-12 my-4" style="width:auto;">
-        <div>
-            </div>
-        <div class="card">
+<div class="m-2">
+    <div class="col-md-12 my-4 row " style="width:auto;">
+        <div class="card col-md-6">
             <div class="card-header d-flex">
-                <div style="width:85%">
-                <h4>Offer Management</h4>
+                <div style = "width:85%;">
+                <h4>Product Offer Management</h4>
+                </div>
+                <div style>
+                <a class="btn-outline-success btn btn-sm" href ="prod_addoffer">Add</a>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <table id="" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Product</th>
+                            <th>Block</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for offer in prod_offers %}
+                        <tr>
+                            <td>{{offer.name}}</td>
+                            <td>{{offer.start_date}}</td>
+                            <td>{{offer.end_date}}</td>
+                            <td>{{offer.product.name}}</td>
+                            <td>
+                                {% if offer.is_active %}
+                                <a class="btn btn-primary" onclick="blockOffer({{offer.id}})" >Block</i></a>
+                                {% else %}
+                                <a class="btn btn-primary" onclick="UnblockOffer({{offer.id}})" >Unblock</i></a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card col-md-6">
+            <div class="card-header d-flex">
+                <div style="width:85%;">
+                <h4>Category Offer Management</h4>
                 </div>
                 <div >
-                <a class="btn btn-primary " href ="addoffer">Add Offer</a>
+                <a class="btn-outline-success btn btn-sm" href ="cate_addoffer">Add</a>
                 </div>
             </div>
             <div class="card-body">
@@ -21,27 +61,26 @@
                             
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th>Product</th>
                             <th>Category</th>
+                            
                             <th>Block</th>
                            
                         </tr>
                     </thead>
                     <tbody>
-                        {% for offer in offers %}
+                        {% for offer in category_offers %}
                         <tr>
                             <td>{{offer.name}}</td>
                             <td>{{offer.start_date}}</td>
                             <td>{{offer.end_date}}</td>
-                            <td>{{offer.product.name}}</td>
                             <td>{{offer.category.name}}</td>
-                            
                             <td>
                                 {% if offer.is_active %}
                                 <a class="btn btn-primary" onclick="blockOffer({{offer.id}})" >Block</i></a>
                                 {% else %}
-                                <a class="btn btn-primary" onclick="UnblockOffer({{offer.id}})" >Unblock</i></a></td>
+                                <a class="btn btn-primary" onclick="UnblockOffer({{offer.id}})" >Unblock</i></a>
                                 {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -50,7 +89,17 @@
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+
 <script>
+    $(document).ready(function () {
+        console.log("hello");
+        $('#myTable tr:last').remove();
+        $('#myTable').DataTable();
+        $('#order_table').DataTable();
+    });
     {% comment %} function deleteOffer(id){
         var id=id;
         alert(id)
@@ -130,12 +179,9 @@
     
         
     
-        $(document).ready( function () {
-          $('#table_id').DataTable();
-        });
-
+        
       
 </script>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.11.3/af-2.3.7/b-2.0.1/b-colvis-2.0.1/b-html5-2.0.1/b-print-2.0.1/cr-1.5.4/date-1.1.1/fc-4.0.0/kt-2.6.4/r-2.2.9/rg-1.1.3/rr-1.2.8/sl-1.3.3/datatables.min.css"/>
+
 
 {% endblock content %}
