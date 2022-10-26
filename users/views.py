@@ -555,7 +555,7 @@ def payment(request):
         categories = Category.objects.all()
         print("==",categories)
         payMode=request.POST['payment']
-        if payMode=='Razorpay':
+        if payMode=='Razorpay' or payMode=='PayPal':
             print(payMode)
             return JsonResponse({'status' : "Your Order has been placed successfully"})
         return render(request, 'user/home.html', {'user': user, 'products': product, 'categories': categories, 'success': success})

@@ -77,7 +77,7 @@ def adminhome(request):
 
 @login_required(login_url='adminlogin')
 def users(request):
-    users = User.objects.filter(is_superuser=False, first_name__isnull=False)
+    users = User.objects.filter(is_superuser=False, last_name__isnull=False)
     return render(request, 'admins/user_management.html', {'users':users})
 @login_required(login_url='adminlogin')
 def acceptrequest(request):
@@ -137,9 +137,34 @@ def products(request):
 
 @login_required(login_url='adminlogin')
 def sales(request):
+    if request.method == 'POST' and 'start_date' in request.POST and 'end_date' in request.POST:
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+        orders=Order.objects.filter(ordered_date__range=[start_date,end_date])
+        return render(request, 'admins/sales.html',{'orders':orders})
     orders=Order.objects.all().order_by('-id')
     return render(request, 'admins/sales.html',{'orders':orders})
 
+@login_required(login_url='adminlogin')
+def monthly_sales(request):
+    month = request.POST['month']
+    print(month)
+    orders = Order.objects.filter(ordered_date__month=month)
+    if len(orders) ==0:
+        # messages.info(request, 'No Orders Found')
+        return render(request, 'admins/sales.html')
+    return render(request, 'admins/sales.html',{'orders':orders})
+
+@login_required(login_url='adminlogin')
+def yearly_sales(request):
+    year = request.POST['year']
+    orders = Order.objects.filter(ordered_date__year=year)
+    if len(orders) ==0:
+        # messages.info(request, 'No Orders Found')
+        return render(request, 'admins/sales.html')
+    return render(request, 'admins/sales.html',{'orders':orders})
+    
+    
 @login_required(login_url='adminlogin')
 def order(request):
     order = Order.objects.all().order_by('-id')

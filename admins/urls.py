@@ -36,6 +36,8 @@ urlpatterns = [
     path('rejectrequest',views.rejectrequest, name='rejectrequest'),
     path('sales',views.sales, name='sales'),
     path('monthly',views.monthly, name='monthly'),
+    path('monthly_sales',views.monthly_sales, name='monthly_sales'),
+    path('yearly_sales',views.yearly_sales, name='yearly_sales'),
     path('yearly',views.yearly, name='yearly'),
     
 ]

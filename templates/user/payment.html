@@ -125,10 +125,14 @@
 
 {% block scripts %}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://www.paypal.com/sdk/js?client-id=Ab4pT6Ivl3b89-zUqPtaDL3nYOf0gEWFSyYtkiDOKcCm1B_U1a9dfJYpwDwVQaQHUwL4Uj-y1RKnHknF&currency=USD"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=ARH7PD1fQS6SUr2D18t4-njtH8ykzz1cfJTCCU7SxL8BnYDKdIrnxxS7XF-D6nSYVgzqbeXHWucqiynk&currency=USD"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
   paypal.Buttons({
+    //onclick: function(data, actions) {
+     // return actions.resolve();
+      
+    //},
     // Sets up the transaction when a payment button is clicked
     createOrder: (data, actions) => {
       return actions.order.create({
@@ -142,10 +146,51 @@
     // Finalize the transaction after payer approval
     onApprove: (data, actions) => {
       return actions.order.capture().then(function(orderData) {
-        // Successful capture! For dev/demo purposes:
         console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-        const transaction = orderData.purchase_units[0].payments.captures[0];
-        alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+        alert(orderData)
+        var total = $('#amount').val()
+        var amount = $('#amount').val()
+        var cart = $('#cart').val()
+        var address = $('#address').val()
+        var payment = "PayPal"
+        var token = $("input[name='csrfmiddlewaretoken']").val()
+        alert(total);
+        $.ajax({
+          url: "/payment",
+          type: "POST",
+          data: {
+            'csrfmiddlewaretoken': token,
+            'amount': amount,
+            'cart': cart,
+            'address': address,
+            'payment': payment,
+          },
+          success: function(response) {
+            console.log(response)
+            
+              swal({
+                title: "Payment Successful",
+                text: "Your payment is successful",
+                icon: "success",
+                button: "OK",
+              }).then(function() {
+                window.location.href = "/";
+              });
+           
+          }
+        })
+
+        //data = {
+        //  'total': total,
+        //  'cart': cart,
+        //  'address': address,
+        //  'payment': payment,
+        //  'csrfmiddlewaretoken': token,
+        //}
+        // Successful capture! For dev/demo purposes:
+        //console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+        //const transaction = orderData.purchase_units[0].payments.captures[0];
+        //alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
         // When ready to go live, remove the alert and show a success message within this page. For example:
         // const element = document.getElementById('paypal-button-container');
         // element.innerHTML = '<h3>Thank you for your payment!</h3>';
