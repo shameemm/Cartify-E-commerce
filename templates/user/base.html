@@ -126,13 +126,13 @@
             {% if request.user.is_authenticated and not user|is_guest_user %}
             <a class="nav-link " style="color: #FFFFFF;" href="myorder">Orders</a>
             {% elif user|is_guest_user%}
-            <a class="nav-link " style="color: #FFFFFF;" href="login">Orders</a>
+            <a class="nav-link " style="color: #FFFFFF;" href="">Orders</a>
             {% endif %}
             
             {% if request.user.is_authenticated and not user|is_guest_user %}
             <a class="nav-link " style="color: #FFFFFF;" href="profile">Profile</a>
             {% elif user|is_guest_user%}
-            <a class="nav-link " style="color: #FFFFFF;" href="login">Profile</a>
+            <a class="nav-link " style="color: #FFFFFF;" href="">Profile</a>
             {% endif %}
             
           
@@ -141,7 +141,7 @@
             {% if request.user.is_authenticated and not user|is_guest_user %}
             <a class="nav-link " style="color: #FFFFFF;" href="logout">logout</a>
             {% elif user|is_guest_user%}
-            <a class="nav-link " style="color: #FFFFFF;" href="login">Guest User</a>
+            <a class="nav-link " style="color: #FFFFFF;" href="">Guest User</a>
             
             {% else %}
             <a class="nav-link " style="color: #FFFFFF;" href="login">login</a>

@@ -77,7 +77,10 @@ def adminhome(request):
 
 @login_required(login_url='adminlogin')
 def users(request):
-    users = User.objects.filter(is_superuser=False, last_name__isnull=False)
+    print("user")
+    str=''
+    users = User.objects.filter(is_superuser=False).exclude(email = str)
+    
     return render(request, 'admins/user_management.html', {'users':users})
 @login_required(login_url='adminlogin')
 def acceptrequest(request):

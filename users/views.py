@@ -91,37 +91,37 @@ def multiply(qty, unit_price, *args, **kwargs):
 
 
 def login(request):
-    if request.user:
+    if request.user and request.user.id is not None:
         print(request.user.id)
+        id=request.user.id
         cart = Cart.objects.get(user=request.user)
         print(cart.product)
         if request.user.is_superuser:
             return redirect('adminhome')
         if request.method == 'POST':
-            # username = request.POST['username']
-            # password = request.POST['password']
-            # user = auth.authenticate(username=username, password=password)
-            # if user is not None:
-            #     auth.login(request, user)
-            #     return redirect('index')
-            # else:
-            #     messages.info(request, 'invalid credentials')
-            #     return redirect('login')
             username = request.POST['username']
             password = request.POST['password']
-            
             user = auth.authenticate(request, username=username, password=password)
             if user is not None and user.is_active and user.is_superuser == False:
+                
                 auth.login(request, user)
                 pid = cart.product_id
                 uid = user.id
+                print("pid=", pid)
+                print("uid=", uid)
+                c=Cart.objects.filter(product=pid, user=uid).exists()
+                print(c)
                 if Cart.objects.filter(product=pid, user=uid).exists():
+                    Cart.objects.filter(user=request.user).update(user=user)
                     cart = Cart.objects.get(product=pid, user=user)
+                    print(cart.quantity)
                     cart.quantity = cart.quantity+1
                     cart.save()
                     return redirect('index')
                 else:
-                    cart = Cart.objects.filter(user=request.user).update(user=user)
+                    cart = Cart.objects.get(user=id)
+                    print(cart.product)
+                    Cart.objects.filter(user=id).update(user=user)
                     print(user)
                     print("req",request.user)
                     return redirect('index')
@@ -367,6 +367,13 @@ def up(request):
 
 
 def getotp(request):
+    # if request.user:
+    #     phone = request.POST['phone']
+    #     if not Accounts.objects.filter(phone=phone).exists():
+    #         messages.info(request, "Phone Number Not Registered")
+    #         return redirect('login')
+        
+       
     phone = request.POST['phone']
     if not Accounts.objects.filter(phone=phone).exists():
         messages.info(request, "Phone Number Not Registered")
@@ -385,20 +392,53 @@ def getotp(request):
 
 
 def otplogin(request):
-    id = request.GET['id']
-    otp = request.POST['otp']
-    user = User.objects.get(id=id)
-    print(user)
-    print(user.accounts.phone)
-    print(user.username)
-    print(user.password)
-    if Accounts.objects.filter(otp=otp).exists():
-        print("user=",user)
-        auth.login(request, user)
-        return redirect('index')
-    else:
-        messages.info(request, "Invalid OTP")
-        return render(request, 'user/otplogin.html',{'user':user})
+    if request.user:
+        id = request.GET['id']
+        otp = request.POST['otp']
+        users = User.objects.get(id=id)
+        print(users)
+        print(request.user)
+        gid=request.user.id
+        print("gid",gid)
+        cart = Cart.objects.get(user=gid)
+        
+        print(cart)
+        if Accounts.objects.filter(user=users).exists():
+            if Cart.objects.filter(user=users,product=cart.product).exists():
+                cart = Cart.objects.get(product=cart.product, user=users)
+                print(cart.quantity)
+                cart.quantity = cart.quantity+1
+                cart.save()
+                request.user.delete()
+                auth.login(request, users,backend='django.contrib.auth.backends.ModelBackend')
+                
+                return redirect('index')
+
+            else:
+                cart = Cart.objects.filter(user=gid).update(user=users)
+                request.user.delete()
+                auth.login(request, users, backend='django.contrib.auth.backends.ModelBackend')
+                print(users)
+                print("req",request.user)
+                return redirect('index')
+        else:
+            messages.info(request, "Invalid OTP")
+            return render(request, 'user/otplogin.html',{'user':user})
+    else:    
+        id = request.GET['id']
+        otp = request.POST['otp']
+        user = User.objects.get(id=id)
+        print(user)
+        print(user.accounts.phone)
+        print(user.username)
+        print(user.password)
+        if Accounts.objects.filter(otp=otp).exists():
+            print("user=",user)
+            auth.login(request, user)
+            return redirect('index')
+        else:
+            messages.info(request, "Invalid OTP")
+            return render(request, 'user/otplogin.html',{'user':user})
 
 
 @login_required(login_url='login')
