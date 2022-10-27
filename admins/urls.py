@@ -39,6 +39,7 @@ urlpatterns = [
     path('monthly_sales',views.monthly_sales, name='monthly_sales'),
     path('yearly_sales',views.yearly_sales, name='yearly_sales'),
     path('yearly',views.yearly, name='yearly'),
+    path('date_select',views.date_select, name='date_select'),
     
 ]
     

@@ -137,6 +137,28 @@
             </div>
             <div class="col-md-12 bg-light rounded mt-2 pt-3">
                 <h4> Filter</h4><hr>
+                <form action="date_select" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="d-flex w-100">
+                            <div class="w-50">
+                            <label for="start_date">Start Date</label>
+                            <input type="date" class="form-control " style="width:70%;" id="start_date" name="start_date" >
+                            </div>
+                            <div class="w-50">
+                            <label for ="end_date">End Date</label>
+                            <input type="date" class="form-control  " style="width:70%;" id="end_date" name="end_date" >
+                            </div>
+                            <button type="submit" id="generate" class="btn btn-primary btn-sm w-25 ">Filter</button>
+                        
+                    </div >
+                   
+                    
+                    {% for message in messages  %}
+                    <span class="text-danger">{{message}}</span>
+                    {% endfor %}            
+                   
+                    </form>
                 <div class = "d-flex"> 
                     <div class = "" style="width:75%;">
                         <form action="yearly_sales" method ="POST">
@@ -178,6 +200,7 @@
                     
 
                 </div>
+                <hr>
                 {% if orders%}
                 <table class="table table-striped  " id="myTable">
                     <thead>

@@ -1,5 +1,5 @@
 {% extends 'user/base.html'%} {% block content%} {% load static %}
-
+{% load guest_user %}
 <div class="col-md-9 mx-auto my-4">
   <div class="bg-light rounded shadow-lg border-0 border-dark overflow-hidden">
     <div class="row g-0">
@@ -19,7 +19,6 @@
                   <img id="myimage" src=".{{image.image.url}}" class="d-block w-100 " alt="..." style="height:300px; width:auto;margin: 100px;" >
                   <div id="myresult" class="img-zoom-result"></div>
                 </div>
-                
                 {% endfor %}
               </div>
               <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
@@ -63,13 +62,24 @@
           
           
           <div class="d-flex" style="width:100%;">
+            {% if request.user.is_authenticated and not user|is_guest_user %}
             <div style="width:50%;">
               <a href="addtocart?pid={{product.id}}" class="btn text-light " style="width:100%; background:#1C3879;">Add To Cart</a>
             </div>
             <div style="width:50%;">
               <a href="buynow?pid={{product.id}}" class="btn ms-2 text-light " style="width:100%; background:#1C3879;">Buy Now </a>
-              
             </div>
+            {% elif user|is_guest_user%}
+            <div style="width:100%;">
+              <a href="addtocart?pid={{product.id}}" class="btn text-light " style="width:100%; background:#1C3879;">Add To Cart</a>
+            </div>
+            
+            {% else %}
+            <div style="width:100%;">
+              <a href="addtocart?pid={{product.id}}" class="btn text-light " style="width:100%; background:#1C3879;">Add To Cart</a>
+            </div>
+            {% endif %}
+           
           </div>
             
               

@@ -117,7 +117,7 @@
                                 <form action="updatestatus?id={{order.id}}" method="POST">
                                 {% csrf_token %}
                                     <select name="status" class="" id="status">
-                                        <option value="0">Update Status</option>
+                                        <option value="0">{{order.status}}</option>
                                         
                                         {% for i in status1 %}
                                         <option value="{{i}}">{{i}}</option>
@@ -131,7 +131,7 @@
                                 <form action="updatestatus?id={{order.id}}" method="POST">
                                     {% csrf_token %}
                                         <select name="status" class="" id="status">
-                                            <option value="0">Update Status</option>
+                                            <option value="0">{{order.status}}</option>
                                             
                                             {% for i in status2 %}
                                             <option value="{{i}}">{{i}}</option>
@@ -145,7 +145,7 @@
                                 <form action="updatestatus?id={{order.id}}" method="POST">
                                 {% csrf_token %}
                                     <select name="status" class="" id="status">
-                                        <option value="0">Update Status</option>
+                                        <option value="0">{{order.status}}</option>
                                         
                                         {% for i in status %}
                                         <option value="{{i}}">{{i}}</option>
@@ -181,7 +181,7 @@
 <script>
     $(document).ready(function () {
         console.log("hello");
-        $('#myTable tr:last').remove();
+        
         $('#myTable').DataTable();
         $('#order_table').DataTable();
     });
@@ -189,7 +189,7 @@
         $('#btn1').click(function(){
             var status = $('#status').val();
             if(status == '0'){
-                alert('Please select a status');
+                swal("Please select a status");
                 return false;
             }
         });

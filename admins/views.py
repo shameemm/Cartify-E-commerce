@@ -166,7 +166,17 @@ def yearly_sales(request):
         # messages.info(request, 'No Orders Found')
         return render(request, 'admins/sales.html')
     return render(request, 'admins/sales.html',{'orders':orders})
-    
+   
+def date_select(request):
+    start = request.POST['start_date']
+    end = request.POST['end_date']
+    print("end=",end)
+    order = Order.objects.filter(ordered_date__range=[start,end])
+    if len(order) ==0:
+        # messages.info(request, 'No Orders Found')
+        return render(request, 'admins/sales.html')
+    else:
+        return render(request, 'admins/sales.html',{'orders':order})
     
 @login_required(login_url='adminlogin')
 def order(request):
