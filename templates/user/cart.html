@@ -48,7 +48,7 @@
                                                 {% comment %} <a href="minus?id={{cart.id}}" class="border btn">-</a> {% endcomment %}
                                                 <button class="border btn minus" id="doWn" onclick=down({{cart.id}})>-</button>
                                             </div>
-                                            <div><span id={{cart.id}} class="mt-2 mx-2">{{cart.quantity}}</span></div>
+                                            <div><span id="{{cart.id}}" class="mx-3" style="margin-top:3px;">{{cart.quantity}}</span></div>
                                             <div class=""style="">
                                                 {% comment %} <a href="up?id={{cart.id}}" class="border btn">+</a> {% endcomment %}
                                                 <button class="border btn up" onclick=up({{cart.id}})>+</button>

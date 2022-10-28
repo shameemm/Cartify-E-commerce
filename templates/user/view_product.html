@@ -44,10 +44,11 @@
           <p class="mb-4 fw-bold fs-4" style="color: #4f4f4e">
             ₹{{product.price}}/-
           </p>
-          {% if offer %}
-          <p class="mb-4 fs-6" style="color: #4f4f4e"> This product has {{offer.offer}}% off upto ₹{{offer.max_value}}/-</p>
-          {% elif ofr%}
-          <p class="mb-4 fs-6" style="color: #4f4f4e"> This product has {{ofr.offer}}% off upto ₹{{ofr.max_value}}/-</p>
+          {% if off %}
+          <p class="mb-4 fs-6" style="color: #4f4f4e"> This product has {{off.offer}}% off upto ₹{{off.max_value}}/-</p>
+          {% endif %}
+          {% if offc%}
+          <p class="mb-4 fs-6" style="color: #4f4f4e"> This product has {{offc.offer}}% off upto ₹{{offc.max_value}}/-</p>
           {% endif %}
           {% comment %} <form action="addtocart?pid={{product.id}}" method="POST">
             {% csrf_token %}
