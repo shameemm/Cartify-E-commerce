@@ -692,6 +692,18 @@ def addtocart(request):
                     user=uid, product=product, quantity=1, price_with_offer=price)
                 cart.save()
                 return redirect('cart')
+            elif offer.category == product.category:
+                price = 0
+                offamount = product.price * offer.offer / 100
+                if offamount > offer.max_value:
+                    price = product.price - offer.max_value
+                else:
+                    price=product.price-offamount
+                print(price)
+                cart = Cart.objects.create(user=uid, product=product, quantity=1, price_with_offer=price)
+                cart.save()
+                return redirect('cart')
+                
         
         cart = Cart.objects.create(product=product, user=uid)
         cart = Cart.objects.filter(user=uid)

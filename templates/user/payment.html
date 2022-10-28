@@ -147,14 +147,14 @@
     onApprove: (data, actions) => {
       return actions.order.capture().then(function(orderData) {
         console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-        alert(orderData)
+        
         var total = $('#amount').val()
         var amount = $('#amount').val()
         var cart = $('#cart').val()
         var address = $('#address').val()
         var payment = "PayPal"
         var token = $("input[name='csrfmiddlewaretoken']").val()
-        alert(total);
+        
         $.ajax({
           url: "/payment",
           type: "POST",

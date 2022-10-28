@@ -139,7 +139,7 @@
                                             {% endfor %}
                                             
                                         </select>
-                                        <button type="submit" id ="btn1"class="btn btn-primary">Update</button>
+                                        <button type="submit" id ="btn1"  class="btn btn-primary">Update</button>
                                     </form>
                                 {% else %}
                                 <form action="updatestatus?id={{order.id}}" method="POST">
@@ -185,11 +185,14 @@
         $('#myTable').DataTable();
         $('#order_table').DataTable();
     });
+
     $(document).ready(function(){
         $('#btn1').click(function(){
+           
             var status = $('#status').val();
+           
             if(status == '0'){
-                swal("Please select a status");
+                swal("Please select a status to update");
                 return false;
             }
         });
@@ -240,6 +243,7 @@
         modal.style.display = "none";
       }
     }
+    
 </script>
 
 {% endblock %}

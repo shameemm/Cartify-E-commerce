@@ -143,13 +143,13 @@
                         <div class="d-flex w-100">
                             <div class="w-50">
                             <label for="start_date">Start Date</label>
-                            <input type="date" class="form-control " style="width:70%;" id="start_date" name="start_date" >
+                            <input type="date" class="form-control " style="width:70%;" id="start_date1" name="start_date" >
                             </div>
                             <div class="w-50">
                             <label for ="end_date">End Date</label>
-                            <input type="date" class="form-control  " style="width:70%;" id="end_date" name="end_date" >
+                            <input type="date" class="form-control  " style="width:70%;" id="end_date1" name="end_date" >
                             </div>
-                            <button type="submit" id="generate" class="btn btn-primary btn-sm w-25 ">Filter</button>
+                            <button type="submit" id="filter" class="btn btn-primary btn-sm w-25 ">Filter</button>
                         
                     </div >
                    
@@ -274,6 +274,10 @@
         $('#myTable').DataTable();
         $('#order_table').DataTable();
     });
+
+    
+
+
     
 </script>
 {% endblock content %}
