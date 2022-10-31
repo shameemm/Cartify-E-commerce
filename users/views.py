@@ -265,7 +265,9 @@ def removecart(request):
     cart.delete()
     return redirect('cart')
 
+
 def view_product(request):
+    
     print(request.session['cart'])
     id = request.GET['id']
     print(id)
