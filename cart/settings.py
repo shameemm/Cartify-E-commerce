@@ -72,7 +72,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
+                'django.temdatabaseplate.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -90,9 +90,9 @@ WSGI_APPLICATION = 'cart.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cart',
+        'NAME': 'database',
         'USER': 'postgres',
-        'PASSWORD' : '1234',
+        'PASSWORD' : '12341234',
         'HOST' : 'localhost',
         'PORT' : '5432',
     }
