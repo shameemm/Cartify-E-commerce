@@ -90,10 +90,10 @@ WSGI_APPLICATION = 'cart.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'database',
+        'NAME': 'cart',
         'USER': 'postgres',
         'PASSWORD' : '12341234',
-        'HOST' : 'localhost',
+        'HOST' : 'database.c09zfaf1qgnt.ap-northeast-1.rds.amazonaws.com',
         'PORT' : '5432',
     }
 }
