@@ -105,21 +105,21 @@ def addproduct(request):
         quantity = request.POST['quantity']
         print(request.FILES,"  1111")
         image = request.FILES['image']
-        image1 = request.FILES['image1']
-        image2 = request.FILES['image2']
-        image3 = request.FILES['image3']
-        print(image1,"  2222")
+        # image1 = request.FILES['image1']
+        # image2 = request.FILES['image2']
+        # image3 = request.FILES['image3']
+        # print(image1,"  2222")
         category=Category.objects.get(id=category)
         # image = Images.objects.create(image=image,product=product)
         product = Product.objects.create(name=name,description=description,price=price,category=category,image=image,brand=brand,quantity=quantity)
         product.save()
         
-        image1 = Images.objects.create(image=image1,product=product)
-        image1.save()
-        image2 = Images.objects.create(image=image2,product=product)
-        image2.save()
-        image3 = Images.objects.create(image=image3,product=product)
-        image3.save()
+        # image1 = Images.objects.create(image=image1,product=product)
+        # image1.save()
+        # image2 = Images.objects.create(image=image2,product=product)
+        # image2.save()
+        # image3 = Images.objects.create(image=image3,product=product)
+        # image3.save()
         return redirect('products')
     else:
         
