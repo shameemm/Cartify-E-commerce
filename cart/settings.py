@@ -25,9 +25,9 @@ TWILIO_AUTH_TOKEN='54296def077d8466dec9ce756f901f72'
 SECRET_KEY = 'django-insecure-g^6q*gpn!8jy6fuuhjkb#3(v$@c_w&j2_2fg9-tv%tjr32#jwq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['54.238.34.242','localhost']
+ALLOWED_HOSTS = ['35.77.226.25','localhost']
 
 
 # Application definition
