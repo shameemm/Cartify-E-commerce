@@ -25,7 +25,7 @@ TWILIO_AUTH_TOKEN='54296def077d8466dec9ce756f901f72'
 SECRET_KEY = 'django-insecure-g^6q*gpn!8jy6fuuhjkb#3(v$@c_w&j2_2fg9-tv%tjr32#jwq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['18.181.246.63','localhost']
 
@@ -86,27 +86,27 @@ WSGI_APPLICATION = 'cart.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'cart',
-#         'USER': 'postgres',
-#         'PASSWORD' : '1234',
-#         'HOST' : 'localhost',
-#         'PORT' : '5433',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cart',
         'USER': 'postgres',
-        'PASSWORD' : '12341234',
-        'HOST' : 'database.c09zfaf1qgnt.ap-northeast-1.rds.amazonaws.com',
-        'PORT' : '5432',
+        'PASSWORD' : '1234',
+        'HOST' : 'localhost',
+        'PORT' : '5433',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'cart',
+#         'USER': 'postgres',
+#         'PASSWORD' : '12341234',
+#         'HOST' : 'database.c09zfaf1qgnt.ap-northeast-1.rds.amazonaws.com',
+#         'PORT' : '5432',
+#     }
+# }
 
 
 # Password validation
