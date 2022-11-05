@@ -25,7 +25,7 @@ TWILIO_AUTH_TOKEN='54296def077d8466dec9ce756f901f72'
 SECRET_KEY = 'django-insecure-g^6q*gpn!8jy6fuuhjkb#3(v$@c_w&j2_2fg9-tv%tjr32#jwq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['35.77.226.25','localhost']
 
@@ -145,14 +145,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 
-MEDIA_URL = '/home/ubuntu/project/Django-Project/media/'
-STATIC_URL = '/static/'
-if DEBUG:
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static')
-    ]
-else:
-    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_URL = '/media/'
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+STATIC_ROOT=os.path.join(BASE_DIR,'assets')
+
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
