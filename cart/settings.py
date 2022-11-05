@@ -29,6 +29,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['35.77.226.25','localhost']
 
+# ALLOWED_HOSTS =['']
 
 # Application definition
 
@@ -143,11 +144,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
-STATIC_ROOT=os.path.join(BASE_DIR,'assets')
+
+MEDIA_URL = '/home/ubuntu/project/Django-Project/media/'
+STATIC_URL = '/static/'
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static')
+    ]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
 
 AUTHENTICATION_BACKENDS = [
    "django.contrib.auth.backends.ModelBackend",
@@ -161,8 +169,7 @@ AUTHENTICATION_BACKENDS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-MEDIA_URL = '/media/'
+
 
 ACCOUNT_SID = TWILIO_ACCOUNT_SID
 AUTH_TOKEN = TWILIO_AUTH_TOKEN
