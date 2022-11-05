@@ -103,7 +103,7 @@ DATABASES = {
         'NAME': 'cart',
         'USER': 'postgres',
         'PASSWORD' : '12341234',
-        'HOST' : 'database.c09zfaf1qgnt.ap-northeast-1.rds.amazonaws.com 1',
+        'HOST' : 'database.c09zfaf1qgnt.ap-northeast-1.rds.amazonaws.com',
         'PORT' : '5432',
     }
 }
