@@ -211,9 +211,6 @@ def edit_product(request):
         brand = request.POST['brand']
         print(request.FILES,"  1111")
         image = request.FILES['image']
-        # image1 = request.FILES['image1']
-        # image2 = request.FILES['image2']
-        # image3 = request.FILES['image3']
         quantity = request.POST['quantity']
         
         category=Category.objects.get(id=category)

@@ -268,61 +268,63 @@ def removecart(request):
 
 def view_product(request):
     
-    print(request.session['cart'])
-    id = request.GET['id']
-    print(id)
-    product = Product.objects.get(id=id)
-    print(product)
-    prdct = Product.objects.filter(id=id)
-    print(prdct)
-    off=''
-    offc=''
-    if Offers.objects.filter(product_id=id).exists():
-        off=Offers.objects.get(product_id=id)
-        print("off",off.offer)
-    if Offers.objects.filter(category=product.category).exists():
-        offc = Offers.objects.get(category=product.category)
-        print("offc",offc.offer)
-    images = Images.objects.filter(product=prdct[0].id)
-    offers = Offers.objects.all()
-    for offer in offers:
-        
-        if offer.product == prdct[0]:
-            # print("offer=",offer.name)
-            for ofr in offers:
-                # print("offer=",offer.name)
-                if ofr.category == product.category:
-                    print("ofr=",ofr.name)
-                    if ofr.offer<offer.offer:
-                        print("offer",offer.offer)
-                        
-                        return render(request, 'user/view_product.html',{'product': product, 'images': images, 'offer': offer, 'offc':offc, 'off': off})
-                    else:
-                        return render(request, 'user/view_product.html',{'product': product, 'images': images, 'offer':ofr,  'offc':offc, 'off': off})
-                # else:
-                    
-        else: 
-            for ofr in offers:
-                # print("offer=",offer.name)
-                if ofr.category == product.category:
-                    print("elseofr=",ofr.name)
-                    return render(request, 'user/view_product.html',{'product': product, 'images': images, 'offer':ofr, 'offc':offc, 'off': off})
-                        
-                        
-                    
-            # print(offer)
-            # return render(request, 'user/product.html', {'product': product, 'images': images, 'offer': offer})
-    # for offer in offers:
-        
-    #     if offer.product == product and offer.category == product.category:
-    #         print("offer = ",offer.name)
-    #         return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
-    #     elif offer.category == product.category:
-    #         print("offer = ",offer.name)
-    #         return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
     
-    return render(request, 'user/view_product.html', {'product': product, 'images':images})
-
+    id = request.GET['id']
+    if Product.objects.filter(id=id).exists():
+        print(id)
+        product = Product.objects.get(id=id)
+        print(product)
+        prdct = Product.objects.filter(id=id)
+        print(prdct)
+        off=''
+        offc=''
+        if Offers.objects.filter(product_id=id).exists():
+            off=Offers.objects.get(product_id=id)
+            print("off",off.offer)
+        if Offers.objects.filter(category=product.category).exists():
+            offc = Offers.objects.get(category=product.category)
+            print("offc",offc.offer)
+        images = Images.objects.filter(product=prdct[0].id)
+        offers = Offers.objects.all()
+        for offer in offers:
+            
+            if offer.product == prdct[0]:
+                # print("offer=",offer.name)
+                for ofr in offers:
+                    # print("offer=",offer.name)
+                    if ofr.category == product.category:
+                        print("ofr=",ofr.name)
+                        if ofr.offer<offer.offer:
+                            print("offer",offer.offer)
+                            
+                            return render(request, 'user/view_product.html',{'product': product, 'images': images, 'offer': offer, 'offc':offc, 'off': off})
+                        else:
+                            return render(request, 'user/view_product.html',{'product': product, 'images': images, 'offer':ofr,  'offc':offc, 'off': off})
+                    # else:
+                        
+            else: 
+                for ofr in offers:
+                    # print("offer=",offer.name)
+                    if ofr.category == product.category:
+                        print("elseofr=",ofr.name)
+                        return render(request, 'user/view_product.html',{'product': product, 'images': images, 'offer':ofr, 'offc':offc, 'off': off})
+                            
+                            
+                        
+                # print(offer)
+                # return render(request, 'user/product.html', {'product': product, 'images': images, 'offer': offer})
+        # for offer in offers:
+            
+        #     if offer.product == product and offer.category == product.category:
+        #         print("offer = ",offer.name)
+        #         return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
+        #     elif offer.category == product.category:
+        #         print("offer = ",offer.name)
+        #         return render(request, 'user/view_product.html', {'product': product, 'images': images, 'offer': offer})
+        
+        return render(request, 'user/view_product.html', {'product': product, 'images':images})
+    else:
+        return redirect('index')
 def razorpay(request):
     cart = Cart.objects.filter(user=request.user)
     subtotal = 0
