@@ -406,7 +406,7 @@ def getotp(request):
 
 
 def otplogin(request):
-    if request.user:
+    if request.user and not request.user.is_anonymous:
         id = request.GET['id']
         otp = request.POST['otp']
         users = User.objects.get(id=id)
@@ -414,8 +414,8 @@ def otplogin(request):
         print(request.user)
         gid=request.user.id
         print("gid",gid)
-        cart = Cart.objects.get(user=gid)
-        
+        if Cart.Objects.filter(user=gid).exists():
+            cart = Cart.objects.get(user=gid)   
         print(cart)
         if Accounts.objects.filter(user=users).exists():
             if Cart.objects.filter(user=users,product=cart.product).exists():
@@ -448,7 +448,7 @@ def otplogin(request):
         print(user.password)
         if Accounts.objects.filter(otp=otp).exists():
             print("user=",user)
-            auth.login(request, user)
+            auth.login(request, user,backend='django.contrib.auth.backends.ModelBackend')
             return redirect('index')
         else:
             messages.info(request, "Invalid OTP")
